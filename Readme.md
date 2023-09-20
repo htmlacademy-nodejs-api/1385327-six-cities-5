@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Oksana Morzhova](https://up.htmlacademy.ru/nodejs-api/5/user/1385327).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Наумов](https://htmlacademy.ru/profile/naumov_evg).
 
 ---
 
