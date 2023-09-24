@@ -1,6 +1,6 @@
 import { FileReader } from './file-reader.interface.js';
 import { readFileSync } from 'node:fs';
-import { Offer, Housing } from '../../types/index.js';
+import { Offer, City, Housing, Feature } from '../../types/index.js';
 
 export class TSVFileReader implements FileReader {
   private rawData = '';
@@ -22,24 +22,27 @@ export class TSVFileReader implements FileReader {
       .split('\n')
       .filter((row) => row.trim().length > 0)
       .map((line) => line.split('\t'))
-      .map(([title, description, date, city, preview, photos, isPremium, isFavourite, rating, housingType, roomCount, guestsCount, rentPrice,conveniences, author, commentsCount, location]) => ({
+      .map(([title, description, createdDate, city, preview, photos, isPremium, isFavourite, rating, housingType, roomCount, guestCount, rentPrice, features, author, commentsCount, location]) => ({
         title,
         description,
-        date,
-        city,
+        postDate: new Date(createdDate),
+        city: (city as City),
         preview,
         photos: photos.split(';'),
         isPremium: JSON.parse(isPremium),
         isFavourite: JSON.parse(isFavourite),
         rating: JSON.parse(rating),
-        housingType: Housing[housingType as 'Apartment' | 'House' | 'Room' | 'Hotel'],
+        housingType: (housingType as Housing),
         roomCount: Number(roomCount),
-        guestsCount: Number(guestsCount),
+        guestCount: Number(guestCount),
         rentPrice: Number(rentPrice),
-        conveniences: conveniences.split(';'),
+        features: (features.split(';') as Feature[]),
         author,
         commentsCount: Number(commentsCount),
-        location: location.split(';').map((item) => Number(item)) as Offer['location'],
+        location: {
+          longitude: Number.parseFloat(location.split(';')[0]),
+          latitude: Number.parseFloat(location.split(';')[1])
+        }
       }));
   }
 }

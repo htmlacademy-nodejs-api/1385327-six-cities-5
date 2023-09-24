@@ -1,10 +1,13 @@
+import { City } from './city.type.js';
 import { Housing } from './housing.enum.js';
+import { Feature } from './feature.enum.js';
+import { Coords } from './coords.type.js';
 
 export type Offer = {
   title: string;
   description: string;
-  date: string,
-  city: string;
+  postDate: Date;
+  city: City;
   preview: string;
   photos: string[];
   isPremium: boolean;
@@ -12,10 +15,10 @@ export type Offer = {
   rating: number;
   housingType: Housing;
   roomCount: number;
-  guestsCount: number;
+  guestCount: number;
   rentPrice: number;
-  conveniences: string[];
+  features: Feature[];
   author: string;
   commentsCount: number;
-  location: [number, number];
+  location: Coords;
 }
