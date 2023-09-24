@@ -1,5 +1,4 @@
 import { Housing } from './housing.enum.js';
-import { Coords } from './coords.type.js';
 
 export type Offer = {
   title: string;
@@ -18,5 +17,5 @@ export type Offer = {
   conveniences: string[];
   author: string;
   commentsCount: number;
-  coordinates: Coords;
+  location: [number, number];
 }
