@@ -22,7 +22,7 @@ export class TSVFileReader implements FileReader {
       .split('\n')
       .filter((row) => row.trim().length > 0)
       .map((line) => line.split('\t'))
-      .map(([title, description, createdDate, city, preview, photos, isPremium, isFavourite, rating, housingType, roomCount, guestCount, rentPrice, features, author, commentsCount, location]) => ({
+      .map(([title, description, createdDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, author, commentsCount, location]) => ({
         title,
         description,
         postDate: new Date(createdDate),
@@ -30,7 +30,7 @@ export class TSVFileReader implements FileReader {
         preview,
         photos: photos.split(';'),
         isPremium: JSON.parse(isPremium),
-        isFavourite: JSON.parse(isFavourite),
+        isFavorite: JSON.parse(isFavorite),
         rating: JSON.parse(rating),
         housingType: (housingType as Housing),
         roomCount: Number(roomCount),
