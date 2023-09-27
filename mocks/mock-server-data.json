@@ -1,0 +1,64 @@
+{
+  "api": {
+    "title": [
+      "title 1",
+      "title 2",
+      "title 3",
+      "title 4",
+      "title 5",
+      "title 6"
+    ],
+    "description": [
+      "description 1",
+      "description 2",
+      "description 3",
+      "description 4",
+      "description 5",
+      "description 6"
+    ],
+    "city": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "preview": [
+      "preview-1.jpg",
+      "preview-2.jpg",
+      "preview-3.jpg",
+      "preview-4.jpg",
+      "preview-5.jpg",
+      "preview-6.jpg"
+    ],
+    "photos": [
+      "photo -1.jpg",
+      "photo -2.jpg",
+      "photo -3.jpg",
+      "photo -4.jpg",
+      "photo -5.jpg",
+      "photo -6.jpg"
+    ],
+    "housingType": [
+      "Apartment",
+      "House",
+      "Room",
+      "Hotel"
+    ],
+    "features": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "author": [
+      "author-1",
+      "author-2",
+      "author-3"
+    ]
+  }
+}
