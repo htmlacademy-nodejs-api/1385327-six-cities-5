@@ -26,5 +26,5 @@ export function createOffer(offerDate: string): Offer {
       longitude: Number.parseFloat(location.split(';')[0]),
       latitude: Number.parseFloat(location.split(';')[1])
     }
-  }
+  };
 }
