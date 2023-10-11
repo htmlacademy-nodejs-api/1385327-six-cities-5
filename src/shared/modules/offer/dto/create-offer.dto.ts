@@ -1,4 +1,4 @@
-import { City, Housing } from '../../../types/index.js';
+import { City, Housing, User } from '../../../types/index.js';
 
 export class CreateOfferDto {
   public title: string;
@@ -15,7 +15,9 @@ export class CreateOfferDto {
   public guestCount: number;
   public rentPrice: number;
   // features: Feature[];
-  public author: string;
+  public author: User;
   public commentsCount: number;
   // location: Coords;
+
+  public userId: string;
 }

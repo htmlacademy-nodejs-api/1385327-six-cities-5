@@ -1,3 +1,4 @@
+import { User} from './user.type.js';
 import { City } from './city.enum.js';
 import { Housing } from './housing.enum.js';
 import { Feature } from './feature.enum.js';
@@ -18,7 +19,7 @@ export type Offer = {
   guestCount: number;
   rentPrice: number;
   features: Feature[];
-  author: string;
+  author: User;
   commentsCount: number;
   location: Coords;
 }

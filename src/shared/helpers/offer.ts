@@ -2,8 +2,10 @@ import { Offer, City, Housing, Feature } from '../types/index.js';
 
 export function createOffer(offerDate: string): Offer {
   const [
-    title, description, createdDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, author, commentsCount, location
+    title, description, createdDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, name, commentsCount, location,  email, avatar, type
   ] = offerDate.replace('\n', '').split('\t');
+
+  const author = { name, email, avatar, type };
 
   return {
     title,
