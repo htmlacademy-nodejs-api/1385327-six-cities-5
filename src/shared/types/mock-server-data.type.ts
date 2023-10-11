@@ -13,7 +13,10 @@ export type MockServerData = {
   // guestCount: number;
   // rentPrice: number;
   features: string[];
-  author: string[];
+  // author: string[];
+  name: string[];
+  email: string[];
+  avatar: string[];
   // commentsCount: number;
   // location: Coords;
 };

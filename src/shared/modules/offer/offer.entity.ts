@@ -1,7 +1,7 @@
-import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose'; //, Ref
-import { City, Housing, User } from '../../types/index.js';
+import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose'; //, Ref
+import { City, Housing } from '../../types/index.js';
 
-// import { UserEntity } from '../user/index.js';
+import { UserEntity } from '../user/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}
@@ -17,10 +17,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ trim: true, required: true })
   public title!: string;
 
-  @prop({trim: true})
+  @prop({trim: true, required: true})
   public description!: string;
 
-  @prop()
+  @prop({required: true})
   public postDate!: Date;
 
   @prop({
@@ -29,21 +29,21 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public city!: City;
 
-  @prop()
+  @prop({required: true})
   public preview!: string;
 
-  @prop()
+  @prop({required: true})
   public photos!: string[];
 
 
-  @prop()
+  @prop({required: true})
   public isPremium!: boolean;
 
-  @prop()
+  @prop({required: true})
   public isFavorite!: boolean;
 
 
-  @prop()
+  @prop({required: true})
   public rating!: number;
 
   @prop({
@@ -52,29 +52,33 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public housingType!: Housing;
 
-  @prop()
+  @prop({required: true})
   public roomCount!: number;
 
-  @prop()
+  @prop({required: true})
   public guestCount!: number;
 
-  @prop()
+  @prop({required: true})
   public rentPrice!: number;
 
   // features: Feature[];
+  @prop({required: true})
+  public features!: string[];
 
-  // @prop({
-  //   ref: UserEntity,
-  //   required: true
-  // })
-  // public author!: Ref<UserEntity>;
-  @prop()
-  public author!: User;
+  @prop({
+    ref: UserEntity,
+    required: true
+  })
+  public author!: Ref<UserEntity>;
+  // @prop({required: true})
+  // public author!: User;
 
   @prop({default: 0})
   public commentsCount!: number;
 
   // location: Coords;
+  @prop({required: true})
+  public location!: string[];
 }
 
 export const OfferModel = getModelForClass(OfferEntity);

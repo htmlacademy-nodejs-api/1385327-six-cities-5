@@ -14,7 +14,7 @@ export class CreateOfferDto {
   public roomCount: number;
   public guestCount: number;
   public rentPrice: number;
-  // features: Feature[];
+  public features: string[];
   public author: User;
   public commentsCount: number;
   // location: Coords;

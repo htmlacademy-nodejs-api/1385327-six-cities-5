@@ -2,6 +2,6 @@ export type User = {
   name: string;
   email: string;
   avatar: string;
-  type: string;
+  isProType: boolean;
   // password: string;
 }

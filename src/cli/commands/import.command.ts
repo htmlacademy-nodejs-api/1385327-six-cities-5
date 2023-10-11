@@ -99,7 +99,7 @@ export class ImportCommand implements Command {
       roomCount: offer.roomCount,
       guestCount: offer.guestCount,
       rentPrice: offer.rentPrice,
-      // features: Feature[];
+      features: offer.features,
       author: offer.author,
       commentsCount: offer.commentsCount,
       // location: Coords;
