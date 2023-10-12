@@ -3,5 +3,4 @@ export type User = {
   email: string;
   avatar: string;
   isProType: boolean;
-  // password: string;
 }

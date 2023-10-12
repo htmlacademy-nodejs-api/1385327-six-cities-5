@@ -1,10 +1,7 @@
 import { Command } from './commands.interface.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
-// import { createOffer, getErrorMessage } from '../../shared/helpers/index.js';
-
 import { createOffer, getErrorMessage, getMongoURI } from '../../shared/helpers/index.js';
 import { UserService } from '../../shared/modules/user/user-service.interface.js';
-
 import { DefaultOfferService, OfferModel, OfferService } from '../../shared/modules/offer/index.js';
 import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
 import { Logger } from '../../shared/libs/logger/index.js';
@@ -13,43 +10,10 @@ import { DefaultUserService, UserModel } from '../../shared/modules/user/index.j
 import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './command.constant.js';
 import { Offer } from '../../shared/types/index.js';
 
-// export class ImportCommand implements Command {
-//   public getName(): string {
-//     return '--import';
-//   }
-
-//   private onImportedLine(line: string) {
-//     const offer = createOffer(line);
-//     console.info(offer);
-//   }
-
-//   private onCompleteImport(count: number) {
-//     console.info(`${count} rows imported.`);
-//   }
-
-//   public async execute(...parameters: string[]): Promise<void> {
-
-//     const [filename] = parameters;
-//     const fileReader = new TSVFileReader(filename.trim());
-
-//     // подписываемся на события
-//     fileReader.on('line', this.onImportedLine);
-//     fileReader.on('end', this.onCompleteImport);
-
-//     try {
-//       await fileReader.read();
-//     } catch (error) {
-
-//       console.error(`Can't import data from file: ${filename}`);
-//       console.error(getErrorMessage(error));
-//     }
-//   }
-// }
-
 export class ImportCommand implements Command {
   private userService: UserService;
-
   private offerService: OfferService;
+
   private databaseClient: DatabaseClient;
   private logger: Logger;
   private salt: string;
@@ -59,9 +23,10 @@ export class ImportCommand implements Command {
     this.onCompleteImport = this.onCompleteImport.bind(this);
 
     this.logger = new ConsoleLogger();
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
 
+    this.offerService = new DefaultOfferService(this.logger, OfferModel);
     this.userService = new DefaultUserService(this.logger, UserModel);
+
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 
@@ -84,8 +49,6 @@ export class ImportCommand implements Command {
     }, this.salt);
 
     await this.offerService.create({
-
-      userId: user.id,
       title: offer.title,
       description: offer.description,
       postDate: offer.postDate,
@@ -100,9 +63,9 @@ export class ImportCommand implements Command {
       guestCount: offer.guestCount,
       rentPrice: offer.rentPrice,
       features: offer.features,
-      author: offer.author,
       commentsCount: offer.commentsCount,
-      // location: Coords;
+      location: offer.location,
+      author: user.id,
     });
 
   }
