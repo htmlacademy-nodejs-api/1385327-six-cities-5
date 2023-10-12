@@ -55,10 +55,21 @@
       "Towels",
       "Fridge"
     ],
-    "author": [
+    "name": [
       "author-1",
       "author-2",
       "author-3"
+    ],
+    "email": [
+      "keks@cot.da",
+      "keks@cot.net",
+      "keks@cot.gde",
+      "keks@cot.tut",
+      "keks@cot.wot"
+    ],
+    "avatar": [
+      "keks1.jpg",
+      "keks2.jpg"
     ]
   }
 }

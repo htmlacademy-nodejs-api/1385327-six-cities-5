@@ -6,14 +6,18 @@ export type MockServerData = {
   preview: string[];
   photos: string[];
   // isPremium: boolean;
-  // isFavourite: boolean;
+  // isFavorite: boolean;
   // rating: number;
   housingType: string[];
   // roomCount: number;
   // guestCount: number;
   // rentPrice: number;
   features: string[];
-  author: string[];
   // commentsCount: number;
-  // location: Coords;
+  // location: [string, string];
+
+  // author:
+  name: string[];
+  email: string[];
+  avatar: string[];
 };

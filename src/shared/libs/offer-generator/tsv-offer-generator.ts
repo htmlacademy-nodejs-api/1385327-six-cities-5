@@ -56,20 +56,24 @@ export class TSVOfferGenerator implements OfferGenerator {
     const city = getRandomItem(this.mockData.city) as keyof typeof City;
     const preview = getRandomItem<string>(this.mockData.preview);
     const photos = getRandomItem<string>(this.mockData.photos);
-    const isPremium = getRandomItem(['true', 'false']);
-    const isFavorite = getRandomItem(['true', 'false']);
+    const isPremium = Boolean(generateRandomValue(0, 1));
+    const isFavorite = Boolean(generateRandomValue(0, 1));
     const rating = generateRandomValue(MIN_RATING, MAX_RATING).toString();
     const housingType = getRandomItem(this.mockData.housingType) as keyof typeof Housing;
     const roomCount = generateRandomValue(MIN_ROOM_COUNT, MAX_ROOM_COUNT).toString();
     const guestCount = generateRandomValue(MIN_GUEST_COUNT, MAX_GUEST_COUNT).toString();
     const rentPrice = generateRandomValue(MIN_PRICE, MAX_PRICE).toString();
     const features = getRandomItems<string>(this.mockData.features).join(';');
-    const author = getRandomItem<string>(this.mockData.author);
-    const commentsCount = generateRandomValue(0, 10).toString();
+    const commentsCount = generateRandomValue(1, 10).toString();
     const location = `${LOCATION[city].longitude};${LOCATION[city].latitude}`;
+    // author
+    const name = getRandomItem<string>(this.mockData.name);
+    const email = getRandomItem<string>(this.mockData.email);
+    const avatar = getRandomItem<string>(this.mockData.avatar);
+    const isProType = Boolean(generateRandomValue(0, 1));
 
     return [
-      title, description, postDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, author, commentsCount, location
+      title, description, postDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, commentsCount, location, name, email, avatar, isProType,
     ].join('\t');
   }
 }

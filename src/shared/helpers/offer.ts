@@ -2,7 +2,7 @@ import { Offer, City, Housing, Feature } from '../types/index.js';
 
 export function createOffer(offerDate: string): Offer {
   const [
-    title, description, createdDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, author, commentsCount, location
+    title, description, createdDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, commentsCount, location, name, email, avatar, isProType
   ] = offerDate.replace('\n', '').split('\t');
 
   return {
@@ -12,19 +12,24 @@ export function createOffer(offerDate: string): Offer {
     city: (city as City),
     preview,
     photos: photos.split(';'),
-    isPremium: JSON.parse(isPremium),
-    isFavorite: JSON.parse(isFavorite),
+    isPremium: isPremium === 'true',
+    isFavorite: isFavorite === 'true',
     rating: JSON.parse(rating),
     housingType: (housingType as Housing),
     roomCount: Number(roomCount),
     guestCount: Number(guestCount),
     rentPrice: Number(rentPrice),
     features: (features.split(';') as Feature[]),
-    author,
     commentsCount: Number(commentsCount),
-    location: {
-      longitude: Number.parseFloat(location.split(';')[0]),
-      latitude: Number.parseFloat(location.split(';')[1])
-    }
+    location: [
+      (location.split(';')[0]),
+      (location.split(';')[1])
+    ],
+    author: {
+      name,
+      email,
+      avatar,
+      isProType: isProType === 'true'
+    },
   };
 }

@@ -52,6 +52,7 @@ export class GenerateCommand implements Command {
       //   console.error(error.message);
       // }
       console.error(getErrorMessage(error));
+      console.error(error);
     }
   }
 }
