@@ -1,0 +1,156 @@
+openapi: 3.0.0
+info:
+  title: API сервер для учебного-проекта «SIX-CITY».
+  description: |-
+    * Список ресурсов и маршрутов сервера «SIX-CITY».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+
+tags:
+  - name: users
+    description: Действия с пользователем.
+  - name: offers
+    description: Действия с объявлениями.
+  - name: favorite
+    description: Действия с фаворитами.
+  - name: comments
+    description: Действия с комментариями.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createUser"
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  # /users/login:
+  #   post:
+  #     tags:
+  #       - users
+  #     summary: Авторизация пользователя
+  #     description: Авторизует пользователя на основе логина и пароля
+
+  #     requestBody:
+  #       description:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+
+  #             properties:
+  #               email:
+  #                 type: string
+  #                 example:
+
+  #               password:
+  #                 type: string
+  #                 example:
+
+  #       required: true
+
+  #     responses:
+  #       "204":
+  #         description:
+
+  #       "400":
+  #         description:
+
+  #   get:
+  #     tags:
+  #       - users
+  #     summary: Проверка состояния пользователя
+  #     description: Возвращает информацию по авторизованному пользователю
+
+  #     security:
+  #       - BearerAuth: []
+
+  #     responses:
+  #       "200":
+  #         description: Current user status
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/userRdo"
+
+  #       "401":
+  #         $ref: "#/components/responses/401"
+
+  # /users/{userId}/avatar:
+  # post:
+  #   tags:
+  #     - users
+  #   summary: Загрузить изображение аватара
+  #   description: Загружает изображение аватара пользователя. Изображение аватара должно быть в формате `png` или `jpg`.
+
+  #   requestBody:
+  #     description:
+  #     content:
+  #       application/json:
+  #         schema:
+  #           type: object
+
+  #           properties:
+  #             email:
+  #               type: string
+  #               example:
+
+  #     required: false
+
+  #   responses:
+  #     "204":
+  #       description:
+
+  #     "400":
+  #       description:
+
+components:
+  schemas:
+    createUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: keks@cot.da
+
+        name:
+          type: string
+          example: Keks
+
+        password:
+          type: string
+          example: 123456
+
+    user:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: .lala57lul965lol86
+
+        email:
+          type: string
+          example: keks@cot.da
