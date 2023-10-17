@@ -9,16 +9,117 @@ info:
   version: 1.0.0
 
 tags:
-  - name: users
-    description: Действия с пользователем.
   - name: offers
     description: Действия с объявлениями.
+  - name: users
+    description: Действия с пользователем.
   - name: favorite
     description: Действия с фаворитами.
   - name: comments
     description: Действия с комментариями.
 
 paths:
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения.
+      description: Создает новое предложение по аренде.
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createOffer"
+        required: true
+      responses:
+        "201":
+          description: Предложение создано.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Указаны некорректные данные."
+        "401":
+          description: "Пользователь не авторизован."
+
+    get:
+      tags:
+        - offers
+      summary: Получение списка предложений по аренде.
+      description: Получает список предложений по аренде.
+      responses:
+        "200":
+          description: Получение списка предложений.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Ошибка запроса."
+        "404":
+          description: "Данные не найдены."
+
+  /offers/{offerId}:
+    put:
+      tags:
+        - offers
+      summary: Редактирование предложения.
+      description: Редактирует предложение по аренде.
+      requestBody:
+        description: Информация для редактирования предложения.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createOffer"
+        required: true
+      responses:
+        "200":
+          description: Предложение успешно отредактировано.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Ошибка запроса."
+        "401":
+          description: "Пользователь не авторизован."
+        "403":
+          description: "Нет права доступа к объекту."
+        "404":
+          description: "Данные не найдены."
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения.
+      description: Удаляет предложение по аренде.
+      responses:
+        "204":
+          description: Предложение успешно удалено.
+        "400":
+          description: "Ошибка запроса."
+        "401":
+          description: "Пользователь не авторизован."
+        "403":
+          description: "Нет права доступа к объекту."
+
+    get:
+      tags:
+        - offers
+      summary: Получение детальной информации о предложении.
+      description: Получает детальную информации о предложении по аренде.
+      responses:
+        "200":
+          description: Получение детальной информации о предложении.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Ошибка запроса."
+
   /users/register:
     post:
       tags:
@@ -127,6 +228,150 @@ paths:
 
 components:
   schemas:
+    createOffer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Lorem ipsum dolor sit amet.
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        city:
+          type: string
+          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          example: Dusseldorf
+        preview:
+          type: string
+          example: https://www.dussrldorf.com/imagePre.jpg
+        photos:
+          type: array
+          items:
+            type: string
+          example:
+            [
+              https://www.dussrldorf.com/image1.jpg,
+              https://www.dussrldorf.com/image2.jpg',
+              https://www.dussrldorf.com/image3.jpg,
+            ]
+        isPremium:
+          type: boolean
+          example: true
+        housingTypeType:
+          type: string
+          enum: [apartment, house, room, hotel]
+          example: house
+        roomCount:
+          type: number
+          example: 1
+        guestCount:
+          type: number
+          example: 7
+        rentPrice:
+          type: number
+          example: 10000
+        features:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                Breakfast,
+                Air conditioning,
+                Laptop friendly workspace,
+                Baby seat,
+                Washer,
+                Towels,
+                Fridge,
+              ]
+          example: [Breakfast, Towels]
+        location:
+          type: array
+          items:
+            type: string
+          example: [51.225402, 6.776314]
+
+    offer:
+      type: object
+      properties:
+        offerId:
+          type: string
+          example: jhyu7654dvbgyh42sl0
+        title:
+          type: string
+          example: Lorem ipsum dolor sit amet.
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        postDate:
+          type: string
+          format: date-time
+          example: "2023-10-17T11:11:11.111Z"
+        city:
+          type: string
+          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          example: Dusseldorf
+        preview:
+          type: string
+          example: https://www.dussrldorf.com/imagePre.jpg
+        photos:
+          type: array
+          items:
+            type: string
+          example:
+            [
+              https://www.dussrldorf.com/image1.jpg,
+              https://www.dussrldorf.com/image2.jpg',
+              https://www.dussrldorf.com/image3.jpg,
+            ]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 2
+        housingTypeType:
+          type: string
+          enum: [apartment, house, room, hotel]
+          example: house
+        roomCount:
+          type: number
+          example: 1
+        guestCount:
+          type: number
+          example: 7
+        rentPrice:
+          type: number
+          example: 10000
+        features:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                Breakfast,
+                Air conditioning,
+                Laptop friendly workspace,
+                Baby seat,
+                Washer,
+                Towels,
+                Fridge,
+              ]
+          example: [Breakfast, Towels]
+        commentsCount:
+          type: number
+          example: 123
+        location:
+          type: array
+          items:
+            type: string
+          example: [51.225402, 6.776314]
+        userId:
+          $ref: "#/components/schemas/user"
+
     createUser:
       type: object
 
