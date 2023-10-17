@@ -1,0 +1,401 @@
+openapi: 3.0.0
+info:
+  title: API сервер для учебного-проекта «SIX-CITY».
+  description: |-
+    * Список ресурсов и маршрутов сервера «SIX-CITY».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+
+tags:
+  - name: offers
+    description: Действия с объявлениями.
+  - name: users
+    description: Действия с пользователем.
+  - name: favorite
+    description: Действия с фаворитами.
+  - name: comments
+    description: Действия с комментариями.
+
+paths:
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения.
+      description: Создает новое предложение по аренде.
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createOffer"
+        required: true
+      responses:
+        "201":
+          description: Предложение создано.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Указаны некорректные данные."
+        "401":
+          description: "Пользователь не авторизован."
+
+    get:
+      tags:
+        - offers
+      summary: Получение списка предложений по аренде.
+      description: Получает список предложений по аренде.
+      responses:
+        "200":
+          description: Получение списка предложений.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Ошибка запроса."
+        "404":
+          description: "Данные не найдены."
+
+  /offers/{offerId}:
+    put:
+      tags:
+        - offers
+      summary: Редактирование предложения.
+      description: Редактирует предложение по аренде.
+      requestBody:
+        description: Информация для редактирования предложения.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createOffer"
+        required: true
+      responses:
+        "200":
+          description: Предложение успешно отредактировано.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Ошибка запроса."
+        "401":
+          description: "Пользователь не авторизован."
+        "403":
+          description: "Нет права доступа к объекту."
+        "404":
+          description: "Данные не найдены."
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения.
+      description: Удаляет предложение по аренде.
+      responses:
+        "204":
+          description: Предложение успешно удалено.
+        "400":
+          description: "Ошибка запроса."
+        "401":
+          description: "Пользователь не авторизован."
+        "403":
+          description: "Нет права доступа к объекту."
+
+    get:
+      tags:
+        - offers
+      summary: Получение детальной информации о предложении.
+      description: Получает детальную информации о предложении по аренде.
+      responses:
+        "200":
+          description: Получение детальной информации о предложении.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/offer"
+        "400":
+          description: "Ошибка запроса."
+
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createUser"
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  # /users/login:
+  #   post:
+  #     tags:
+  #       - users
+  #     summary: Авторизация пользователя
+  #     description: Авторизует пользователя на основе логина и пароля
+
+  #     requestBody:
+  #       description:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+
+  #             properties:
+  #               email:
+  #                 type: string
+  #                 example:
+
+  #               password:
+  #                 type: string
+  #                 example:
+
+  #       required: true
+
+  #     responses:
+  #       "204":
+  #         description:
+
+  #       "400":
+  #         description:
+
+  #   get:
+  #     tags:
+  #       - users
+  #     summary: Проверка состояния пользователя
+  #     description: Возвращает информацию по авторизованному пользователю
+
+  #     security:
+  #       - BearerAuth: []
+
+  #     responses:
+  #       "200":
+  #         description: Current user status
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/userRdo"
+
+  #       "401":
+  #         $ref: "#/components/responses/401"
+
+  # /users/{userId}/avatar:
+  # post:
+  #   tags:
+  #     - users
+  #   summary: Загрузить изображение аватара
+  #   description: Загружает изображение аватара пользователя. Изображение аватара должно быть в формате `png` или `jpg`.
+
+  #   requestBody:
+  #     description:
+  #     content:
+  #       application/json:
+  #         schema:
+  #           type: object
+
+  #           properties:
+  #             email:
+  #               type: string
+  #               example:
+
+  #     required: false
+
+  #   responses:
+  #     "204":
+  #       description:
+
+  #     "400":
+  #       description:
+
+components:
+  schemas:
+    createOffer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Lorem ipsum dolor sit amet.
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        city:
+          type: string
+          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          example: Dusseldorf
+        preview:
+          type: string
+          example: https://www.dussrldorf.com/imagePre.jpg
+        photos:
+          type: array
+          items:
+            type: string
+          example:
+            [
+              https://www.dussrldorf.com/image1.jpg,
+              https://www.dussrldorf.com/image2.jpg',
+              https://www.dussrldorf.com/image3.jpg,
+            ]
+        isPremium:
+          type: boolean
+          example: true
+        housingTypeType:
+          type: string
+          enum: [apartment, house, room, hotel]
+          example: house
+        roomCount:
+          type: number
+          example: 1
+        guestCount:
+          type: number
+          example: 7
+        rentPrice:
+          type: number
+          example: 10000
+        features:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                Breakfast,
+                Air conditioning,
+                Laptop friendly workspace,
+                Baby seat,
+                Washer,
+                Towels,
+                Fridge,
+              ]
+          example: [Breakfast, Towels]
+        location:
+          type: array
+          items:
+            type: string
+          example: [51.225402, 6.776314]
+
+    offer:
+      type: object
+      properties:
+        offerId:
+          type: string
+          example: jhyu7654dvbgyh42sl0
+        title:
+          type: string
+          example: Lorem ipsum dolor sit amet.
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        postDate:
+          type: string
+          format: date-time
+          example: "2023-10-17T11:11:11.111Z"
+        city:
+          type: string
+          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          example: Dusseldorf
+        preview:
+          type: string
+          example: https://www.dussrldorf.com/imagePre.jpg
+        photos:
+          type: array
+          items:
+            type: string
+          example:
+            [
+              https://www.dussrldorf.com/image1.jpg,
+              https://www.dussrldorf.com/image2.jpg',
+              https://www.dussrldorf.com/image3.jpg,
+            ]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 2
+        housingTypeType:
+          type: string
+          enum: [apartment, house, room, hotel]
+          example: house
+        roomCount:
+          type: number
+          example: 1
+        guestCount:
+          type: number
+          example: 7
+        rentPrice:
+          type: number
+          example: 10000
+        features:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                Breakfast,
+                Air conditioning,
+                Laptop friendly workspace,
+                Baby seat,
+                Washer,
+                Towels,
+                Fridge,
+              ]
+          example: [Breakfast, Towels]
+        commentsCount:
+          type: number
+          example: 123
+        location:
+          type: array
+          items:
+            type: string
+          example: [51.225402, 6.776314]
+        userId:
+          $ref: "#/components/schemas/user"
+
+    createUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: keks@cot.da
+
+        name:
+          type: string
+          example: Keks
+
+        password:
+          type: string
+          example: 123456
+
+    user:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: .lala57lul965lol86
+
+        email:
+          type: string
+          example: keks@cot.da
