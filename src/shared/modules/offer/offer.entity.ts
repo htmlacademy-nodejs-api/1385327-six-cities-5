@@ -87,7 +87,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public location!: [string, string];
 
   //17
-  @prop()
+  @prop({
+    ref: UserEntity,
+    required: true
+  })
   public author!: Ref<UserEntity>;
 }
 

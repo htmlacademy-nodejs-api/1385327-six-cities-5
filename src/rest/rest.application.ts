@@ -4,7 +4,7 @@ import { Config, RestSchema } from '../shared/libs/config/index.js';
 import { Component } from '../shared/types/index.js';
 import { DatabaseClient } from '../shared/libs/database-client/index.js';
 import { getMongoURI } from '../shared/helpers/index.js';
-// import { OfferService } from '../shared/modules/offer/offer-service.interface.js';
+import { OfferService } from '../shared/modules/offer/offer-service.interface.js';
 // import { UserModel } from '../shared/modules/user/index.js';
 
 @injectable()
@@ -14,7 +14,7 @@ export class RestApplication {
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
-    // @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {}
 
   private async _initDb() {
@@ -47,7 +47,9 @@ export class RestApplication {
 
     this.logger.info('Init database completed');
 
-    // const result = await this.offerService.findById('6527c2e71befd93c6cc52954');
-    // console.log(result);
+    // const result = await this.offerService.findById('652fa3d32b729346360f5304');
+    const result = await this.offerService.findPremiumByCityName('Cologne');
+    console.log(result);
+
   }
 }
