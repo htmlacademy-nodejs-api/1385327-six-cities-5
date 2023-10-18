@@ -25,9 +25,9 @@ export class DefaultOfferService implements OfferService {
 
   public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
-    .findById(offerId)
-    .populate(['author'])
-    .exec();
+      .findById(offerId)
+      .populate(['author'])
+      .exec();
   }
 
   public async find(): Promise<DocumentType<OfferEntity>[]> {
@@ -62,7 +62,8 @@ export class DefaultOfferService implements OfferService {
     return (await this.offerModel
       .exists({_id: documentId})) !== null;
   }
-// Счетчик коментов мож потом понадобиться куда-то принцип взять
+
+  // Счетчик коментов мож потом понадобиться куда-то принцип взять
   public async incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, {'$inc': {
@@ -90,9 +91,9 @@ export class DefaultOfferService implements OfferService {
 
   public async findPremiumByCityName(city: string): Promise<DocumentType<OfferEntity>[] | null> {
     return await this.offerModel
-    .find({isPremium: true, city})
-    .sort({ createdAt: SortType.Down })
-    .limit(DEFAULT_PREMIUM_OFFER_COUNT)
-    .exec();
+      .find({isPremium: true, city})
+      .sort({ createdAt: SortType.Down })
+      .limit(DEFAULT_PREMIUM_OFFER_COUNT)
+      .exec();
   }
 }
