@@ -6,8 +6,6 @@ import { Component } from '../shared/types/index.js';
 import { DatabaseClient } from '../shared/libs/database-client/index.js';
 import { getMongoURI } from '../shared/helpers/index.js';
 import { Controller } from '../shared/libs/rest/index.js';
-// import { OfferService } from '../shared/modules/offer/offer-service.interface.js';
-// import { UserModel } from '../shared/modules/user/index.js';
 
 @injectable()
 export class RestApplication {
@@ -18,7 +16,6 @@ export class RestApplication {
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly databaseClient: DatabaseClient,
     @inject(Component.OfferController) private readonly offerController: Controller,
-    // @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     this.server = express();
   }
@@ -44,15 +41,20 @@ export class RestApplication {
     this.server.use('/offers', this.offerController.router);
   }
 
+  private async _initMiddleware() {
+    this.server.use(express.json());
+  }
+
   public async init() {
-    // console.log(process.env);
     this.logger.info('Application initialization');
-    // this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
     this.logger.info('Init database...');
     await this._initDb();
-
     this.logger.info('Init database completed');
+
+    this.logger.info('Init app-level middleware');
+    await this._initMiddleware();
+    this.logger.info('App-level middleware initialization completed');
 
     this.logger.info('Init controllers');
     await this._initControllers();
@@ -61,10 +63,6 @@ export class RestApplication {
     this.logger.info('Try to init server...');
     await this._initServer();
     this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
-
-    // const result = await this.offerService.findById('652fa3d32b729346360f5304');
-    // const result = await this.offerService.findPremiumByCityName('Cologne');
-    // console.log(result);
 
   }
 }

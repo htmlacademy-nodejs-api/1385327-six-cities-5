@@ -29,6 +29,15 @@ export class DefaultOfferService implements OfferService {
       .populate(['author'])
       .exec();
   }
+  //
+
+  // public async findByTitle(title: string): Promise<DocumentType<OfferEntity> | null> {
+  //   return this.offerModel
+  //     .findByTitle(title)
+  //     .populate(['author'])
+  //     .exec();
+  // }
+  //
 
   public async find(): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
