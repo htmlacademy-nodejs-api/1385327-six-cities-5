@@ -29,15 +29,6 @@ export class DefaultOfferService implements OfferService {
       .populate(['author'])
       .exec();
   }
-  //
-
-  // public async findByTitle(title: string): Promise<DocumentType<OfferEntity> | null> {
-  //   return this.offerModel
-  //     .findByTitle(title)
-  //     .populate(['author'])
-  //     .exec();
-  // }
-  //
 
   public async find(): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
@@ -58,14 +49,6 @@ export class DefaultOfferService implements OfferService {
       .populate(['author'])
       .exec();
   }
-
-  // public async findByCategoryId(categoryId: string, count?: number): Promise<DocumentType<OfferEntity>[]> {
-  //   const limit = count ?? DEFAULT_OFFER_COUNT;
-  //   return this.offerModel
-  //     .find({categories: categoryId}, {}, {limit})
-  //     .populate(['userId', 'categories'])
-  //     .exec();
-  // }
 
   public async exists(documentId: string): Promise<boolean> {
     return (await this.offerModel
@@ -100,7 +83,7 @@ export class DefaultOfferService implements OfferService {
 
   public async findPremiumByCityName(city: string): Promise<DocumentType<OfferEntity>[] | null> {
     return await this.offerModel
-      .find({isPremium: true, city})
+      .find({ isPremium: true, city })
       .sort({ createdAt: SortType.Down })
       .limit(DEFAULT_PREMIUM_OFFER_COUNT)
       .exec();

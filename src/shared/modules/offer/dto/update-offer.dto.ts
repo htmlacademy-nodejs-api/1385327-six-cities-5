@@ -1,4 +1,4 @@
-import { City, Housing } from '../../../types/index.js';
+import { City, Housing, Feature } from '../../../types/index.js';
 
 export class UpdateOfferDto {
   public title?: string;
@@ -14,7 +14,7 @@ export class UpdateOfferDto {
   public roomCount?: number;
   public guestCount?: number;
   public rentPrice?: number;
-  public features?: string[];
+  public features?: Feature[];
   public commentsCount?: number;
   public location?: [string, string];
   // public author: string;

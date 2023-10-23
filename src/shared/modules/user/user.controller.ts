@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { BaseController, HttpMethod, HttpError } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
@@ -21,8 +21,16 @@ export class UserController extends BaseController {
     super(logger);
     this.logger.info('Register routes for UserController...');
 
+    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
+
+  }
+
+  public async index(_req: Request, res: Response): Promise<void> {
+    const users = await this.userService.find();
+    const responseData = fillDTO(UserRdo, users);
+    this.ok(res, responseData);
   }
 
   public async create(
