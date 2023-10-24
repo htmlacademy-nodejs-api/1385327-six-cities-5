@@ -1,9 +1,9 @@
 export enum Feature {
-  breakfast = 'Breakfast',
-  conditioning = 'Air conditioning',
-  workspace = 'Laptop friendly workspace',
-  babySeat = 'Baby seat',
-  washer = 'Washer',
-  towels = 'Towels',
-  fridge = 'Fridge'
+  Breakfast = 'Breakfast',
+  Conditioning = 'Air conditioning',
+  Workspace = 'Laptop friendly workspace',
+  BabySeat = 'Baby seat',
+  Washer = 'Washer',
+  Towels = 'Towels',
+  Fridge = 'Fridge'
  }

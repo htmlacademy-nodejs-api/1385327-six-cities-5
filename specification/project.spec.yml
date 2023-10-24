@@ -13,8 +13,6 @@ tags:
     description: Действия с объявлениями.
   - name: users
     description: Действия с пользователем.
-  - name: favorite
-    description: Действия с фаворитами.
   - name: comments
     description: Действия с комментариями.
 

@@ -50,14 +50,6 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  // public async findByCategoryId(categoryId: string, count?: number): Promise<DocumentType<OfferEntity>[]> {
-  //   const limit = count ?? DEFAULT_OFFER_COUNT;
-  //   return this.offerModel
-  //     .find({categories: categoryId}, {}, {limit})
-  //     .populate(['userId', 'categories'])
-  //     .exec();
-  // }
-
   public async exists(documentId: string): Promise<boolean> {
     return (await this.offerModel
       .exists({_id: documentId})) !== null;
@@ -91,9 +83,10 @@ export class DefaultOfferService implements OfferService {
 
   public async findPremiumByCityName(city: string): Promise<DocumentType<OfferEntity>[] | null> {
     return await this.offerModel
-      .find({isPremium: true, city})
+      .find({ isPremium: true, city })
       .sort({ createdAt: SortType.Down })
       .limit(DEFAULT_PREMIUM_OFFER_COUNT)
       .exec();
   }
+
 }

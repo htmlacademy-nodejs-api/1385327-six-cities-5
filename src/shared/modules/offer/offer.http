@@ -1,0 +1,70 @@
+# Предложения
+## Получить список предложений
+GET http://localhost:4000/offers HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Добавить новое предложение
+POST http://localhost:4000/offers HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Lorem ipsum dolor sit amet.",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "postDate": "2023-10-01T09:06:27.334Z",
+  "city": "Dusseldorf",
+  "preview": "https://www.dussrldorf.com/imagePre.jpg",
+  "photos": "[https://www.dussrldorf.com/image1.jpg, https://www.dussrldorf.com/image2.jpg', https://www.dussrldorf.com/image3.jpg]",
+  "isPremium": "true",
+  "isFavorite": "true",
+  "rating": "13",
+  "housingType": "House",
+  "roomCount": "1",
+  "guestCount": "7",
+  "rentPrice": "10000",
+  "features": "[Breakfast]",
+  "commentsCount": "1258",
+  "location": "[51.225402, 6.776314]",
+  "author": "652fa3d32b729346360f52fc"
+}
+
+###
+
+## Получение информации по идентификатору
+
+GET http://localhost:4000/offers/65363e58295e6243cd1a6eeb HTTP/1.1
+
+###
+
+## Обновить предложение
+
+PATCH http://localhost:4000/offers/65363e58295e6243cd1a6eeb HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "title-55",
+  "description": "Проверка обновления"
+}
+
+###
+
+## Удалить предложение по идентификатору
+
+DELETE http://localhost:4000/offers/65363e58295e6243cd1a6eeb HTTP/1.1
+
+
+###
+
+###
+
+## Список комментариев к предложению
+GET http://localhost:4000/offers/652fa3d32b729346360f52ff/comments HTTP/1.1
+
+###
+
+## Получить премиальные предложения для города
+
+GET http://localhost:4000/offers/Amsterdam/premium HTTP/1.1
+
+###
