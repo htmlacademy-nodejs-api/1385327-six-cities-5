@@ -88,4 +88,5 @@ export class DefaultOfferService implements OfferService {
       .limit(DEFAULT_PREMIUM_OFFER_COUNT)
       .exec();
   }
+
 }

@@ -65,6 +65,6 @@ GET http://localhost:4000/offers/652fa3d32b729346360f52ff/comments HTTP/1.1
 
 ## Получить премиальные предложения для города
 
-GET http://localhost:5000/offers/Amsterdam/premium HTTP/1.1
+GET http://localhost:4000/offers/Amsterdam/premium HTTP/1.1
 
 ###
