@@ -15,7 +15,7 @@ Content-Type: application/json
   "name": "Jack",
   "email": "torans@overlook.net",
   "avatar": "torrance.png",
-  "isProType": "true",
+  "isProType": true,
   "password": "shining"
 }
 

@@ -31,21 +31,21 @@ export const CreateOfferValidationMessage = {
   },
   roomCount: {
     invalidFormat: 'room must be an integer',
-    minValue: 'Minimum room is 1',
-    maxValue: 'Maximum room is 8',
+    minValue: 'minimum room is 1',
+    maxValue: 'maximum room is 8',
   },
   guestCount: {
     invalidFormat: 'guest must be an integer',
-    minValue: 'Minimum guest is 1',
-    maxValue: 'Maximum guest is 10',
+    minValue: 'minimum guest is 1',
+    maxValue: 'maximum guest is 10',
   },
   rentPrice: {
     invalidFormat: 'price must be an integer',
-    minValue: 'Minimum price is 100',
-    maxValue: 'Maximum price is 100 000',
+    minValue: 'minimum price is 100',
+    maxValue: 'maximum price is 100 000',
   },
   features: {
-    invalidFormat: 'Field categories must be an array',
+    invalidFormat: 'field categories must be an array',
   },
   //commentsCount: {},
   location: {
