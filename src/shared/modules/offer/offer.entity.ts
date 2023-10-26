@@ -52,12 +52,12 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public isPremium!: boolean;
 
   //8
-  @prop()
-  public isFavorite!: boolean;
+  // @prop()
+  // public isFavorite!: boolean;
 
   //9
-  @prop()
-  public rating!: number;
+  // @prop()
+  // public rating!: number;
 
   //10
   @prop({
