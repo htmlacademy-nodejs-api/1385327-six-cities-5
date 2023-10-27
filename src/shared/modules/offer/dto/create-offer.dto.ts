@@ -54,7 +54,7 @@ export class CreateOfferDto {
   @IsArray({message: CreateOfferValidationMessage.features.invalidFormat})
   public features: Feature[];
 
-  public commentsCount: number;
+  //public commentsCount: number;
 
   @IsArray({message: CreateOfferValidationMessage.location.invalidFormat})
   @ArrayMaxSize(2, {message: CreateOfferValidationMessage.location.length})

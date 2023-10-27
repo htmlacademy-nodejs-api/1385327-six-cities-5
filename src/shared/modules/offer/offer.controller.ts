@@ -74,7 +74,7 @@ export class OfferController extends BaseController {
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find();
+    const offers = await this.offerService.find(60);// почему не робит без цифры ...
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 

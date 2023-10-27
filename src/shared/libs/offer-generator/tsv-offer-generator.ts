@@ -6,8 +6,8 @@ import { generateRandomValue, getRandomItem, getRandomItems } from '../../helper
 const FIRST_WEEK_DAY = 1;
 const LAST_WEEK_DAY = 7;
 
-const MIN_RATING = 1;
-const MAX_RATING = 5;
+// const MIN_RATING = 1;
+// const MAX_RATING = 5;
 
 const MIN_ROOM_COUNT = 1;
 const MAX_ROOM_COUNT = 8;
@@ -57,8 +57,8 @@ export class TSVOfferGenerator implements OfferGenerator {
     const preview = getRandomItem<string>(this.mockData.preview);
     const photos = getRandomItem<string>(this.mockData.photos);
     const isPremium = Boolean(generateRandomValue(0, 1));
-    const isFavorite = Boolean(generateRandomValue(0, 1));
-    const rating = generateRandomValue(MIN_RATING, MAX_RATING).toString();
+    //const isFavorite = Boolean(generateRandomValue(0, 1));
+    //const rating = generateRandomValue(MIN_RATING, MAX_RATING).toString();
     const housingType = getRandomItem(this.mockData.housingType) as keyof typeof Housing;
     const roomCount = generateRandomValue(MIN_ROOM_COUNT, MAX_ROOM_COUNT).toString();
     const guestCount = generateRandomValue(MIN_GUEST_COUNT, MAX_GUEST_COUNT).toString();
@@ -73,7 +73,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     const isProType = Boolean(generateRandomValue(0, 1));
 
     return [
-      title, description, postDate, city, preview, photos, isPremium, isFavorite, rating, housingType, roomCount, guestCount, rentPrice, features, commentsCount, location, name, email, avatar, isProType,
-    ].join('\t');
+      title, description, postDate, city, preview, photos, isPremium, housingType, roomCount, guestCount, rentPrice, features, commentsCount, location, name, email, avatar, isProType,
+    ].join('\t');//isFavorite, rating,
   }
 }
