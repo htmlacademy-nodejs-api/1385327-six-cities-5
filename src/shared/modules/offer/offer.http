@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ## Получение информации по идентификатору
 
-GET http://localhost:4000/offers/653a3bea402f30b4b62f6cc0 HTTP/1.1
+GET http://localhost:4000/offers/652fa3d32b729346360f52ff HTTP/1.1
 
 ###
 
