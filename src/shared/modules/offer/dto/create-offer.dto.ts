@@ -1,4 +1,4 @@
-import { Length, IsString, IsDateString, IsEnum, ArrayMinSize, ArrayMaxSize, IsBoolean, Min, Max, IsInt, IsArray, IsMongoId } from 'class-validator';
+import { Length, IsString, IsDateString, IsEnum, ArrayMinSize, ArrayMaxSize, IsBoolean, Min, Max, IsInt, IsArray } from 'class-validator';
 import { City, Feature, Housing } from '../../../types/index.js';
 import { CreateOfferValidationMessage } from './create-offer.messages.js';
 
@@ -62,6 +62,6 @@ export class CreateOfferDto {
   @IsString({each: true, message: CreateOfferValidationMessage.location.invalidValue})
   public location: [string, string];
 
-  @IsMongoId({ message: CreateOfferValidationMessage.author.invalidId })
+  //@IsMongoId({ message: CreateOfferValidationMessage.author.invalidId })
   public author: string;
 }

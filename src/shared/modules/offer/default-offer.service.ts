@@ -43,7 +43,7 @@ export class DefaultOfferService implements OfferService {
     },
     {
       $addFields: {
-        rating: { $round: [{ $avg: '$comments.rating' }, 1]},
+        rating: { $round: [{ $avg: '$comments.rating' }, 1]},//если нет то пишет null
         commentsCount: { $size: '$comments' }
       },
     },
