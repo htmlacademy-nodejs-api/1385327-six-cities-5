@@ -22,7 +22,7 @@ export const Component = {
   OfferController: Symbol.for('OfferController'),
   UserController: Symbol.for('UserController'),
   CommentController: Symbol.for('CommentController'),
-  //FavoriteController: Symbol.for('FavoriteController'),
+  FavoriteController: Symbol.for('FavoriteController'),
 
   ExceptionFilter: Symbol.for('ExceptionFilter'),
 } as const;

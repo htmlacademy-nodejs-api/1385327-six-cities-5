@@ -1,6 +1,7 @@
 import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
 import { UserEntity } from '../user/index.js';
 import { OfferEntity } from '../offer/offer.entity.js';
+//import { Types } from 'mongoose';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface FavoriteEntity extends defaultClasses.Base {}
@@ -24,6 +25,7 @@ export class FavoriteEntity extends defaultClasses.TimeStamps {
     required: true
   })
   public offerId: Ref<OfferEntity>;
+
 }
 
 export const FavoriteModel = getModelForClass(FavoriteEntity);
