@@ -1,16 +1,32 @@
 import { IsOptional, Length, IsString, IsDateString, IsEnum, ArrayMinSize, ArrayMaxSize, IsBoolean, Min, Max, IsInt, IsArray } from 'class-validator';
 import { City, Housing, Feature } from '../../../types/index.js';
 import { CreateOfferValidationMessage } from './create-offer.messages.js';
+import {
+  MIN_TITLE_LENGTH,
+  MAX_TITLE_LENGTH,
+  MIN_DESCRIPTION_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
+  MIN_IMAGES_COUNT,
+  MAX_IMAGES_COUNT,
+  MIN_ROOM_COUNT,
+  MAX_ROOM_COUNT,
+  MIN_GUEST_COUNT,
+  MAX_GUEST_COUNT,
+  MIN_PRICE,
+  MAX_PRICE,
+  MIN_COORDS_LENGTH,
+  MAX_COORDS_LENGTH
+} from './constant.js';
 
 export class UpdateOfferDto {
   @IsOptional()
   @IsString({message: CreateOfferValidationMessage.title.invalidFormat})
-  @Length(10, 100, { message: CreateOfferValidationMessage.title.length })
+  @Length(MIN_TITLE_LENGTH, MAX_TITLE_LENGTH, { message: CreateOfferValidationMessage.title.length })
   public title?: string;
 
   @IsOptional()
   @IsString({message: CreateOfferValidationMessage.title.invalidFormat})
-  @Length(20, 1024, { message: CreateOfferValidationMessage.title.length })
+  @Length(MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, { message: CreateOfferValidationMessage.title.length })
   public description?: string;
 
   @IsOptional()
@@ -27,8 +43,8 @@ export class UpdateOfferDto {
 
   @IsOptional()
   @IsArray({message: CreateOfferValidationMessage.photos.invalidFormat})
-  @ArrayMinSize(6, {message: CreateOfferValidationMessage.photos.invalidCount})
-  @ArrayMaxSize(6, {message: CreateOfferValidationMessage.photos.invalidCount})
+  @ArrayMinSize(MIN_IMAGES_COUNT, {message: CreateOfferValidationMessage.photos.invalidCount})
+  @ArrayMaxSize(MAX_IMAGES_COUNT, {message: CreateOfferValidationMessage.photos.invalidCount})
   @IsString({each: true, message: CreateOfferValidationMessage.photos.invalidValue})
   public photos?: string[];
 
@@ -45,20 +61,20 @@ export class UpdateOfferDto {
 
   @IsOptional()
   @IsInt({ message: CreateOfferValidationMessage.roomCount.invalidFormat })
-  @Min(1, {message: CreateOfferValidationMessage.roomCount.minValue})
-  @Max(8, {message: CreateOfferValidationMessage.roomCount.maxValue})
+  @Min(MIN_ROOM_COUNT, {message: CreateOfferValidationMessage.roomCount.minValue})
+  @Max(MAX_ROOM_COUNT, {message: CreateOfferValidationMessage.roomCount.maxValue})
   public roomCount?: number;
 
   @IsOptional()
   @IsInt({ message: CreateOfferValidationMessage.guestCount.invalidFormat })
-  @Min(1, {message: CreateOfferValidationMessage.guestCount.minValue})
-  @Max(10, {message: CreateOfferValidationMessage.guestCount.maxValue})
+  @Min(MIN_GUEST_COUNT, {message: CreateOfferValidationMessage.guestCount.minValue})
+  @Max(MAX_GUEST_COUNT, {message: CreateOfferValidationMessage.guestCount.maxValue})
   public guestCount?: number;
 
   @IsOptional()
   @IsInt({ message: CreateOfferValidationMessage.rentPrice.invalidFormat })
-  @Min(100, {message: CreateOfferValidationMessage.rentPrice.minValue})
-  @Max(100000, {message: CreateOfferValidationMessage.rentPrice.maxValue})
+  @Min(MIN_PRICE, {message: CreateOfferValidationMessage.rentPrice.minValue})
+  @Max(MAX_PRICE, {message: CreateOfferValidationMessage.rentPrice.maxValue})
   public rentPrice?: number;
 
   @IsOptional()
@@ -70,8 +86,8 @@ export class UpdateOfferDto {
 
   @IsOptional()
   @IsArray({message: CreateOfferValidationMessage.location.invalidFormat})
-  @ArrayMaxSize(2, {message: CreateOfferValidationMessage.location.length})
-  @ArrayMinSize(2, {message: CreateOfferValidationMessage.location.length})
+  @ArrayMaxSize(MIN_COORDS_LENGTH, {message: CreateOfferValidationMessage.location.length})
+  @ArrayMinSize(MAX_COORDS_LENGTH, {message: CreateOfferValidationMessage.location.length})
   @IsString({each: true, message: CreateOfferValidationMessage.location.invalidValue})
   public location?: [string, string];
   // public author: string;

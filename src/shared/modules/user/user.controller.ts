@@ -1,19 +1,32 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { BaseController, HttpMethod, HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware, UploadFileMiddleware } from '../../libs/rest/index.js';
+
+import {
+  BaseController,
+  HttpMethod,
+  HttpError,
+  ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
+  UploadFileMiddleware,
+  PrivateRouteMiddleware
+} from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
-import { CreateUserRequest } from './create-user-request.type.js';
+
 import { UserService } from './user-service.interface.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
+import { AuthService } from '../auth/index.js';
+
 import { fillDTO } from '../../helpers/common.js';
-import { UserRdo } from './rdo/user.rdo.js';
-import { LoginUserRequest } from './login-user-request.type.js';
+
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
-import { AuthService } from '../auth/index.js';
+import { UserRdo } from './rdo/user.rdo.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
+
+import { LoginUserRequest } from './types/login-user-request.type.js';
+import { CreateUserRequest } from './types/create-user-request.type.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -26,26 +39,33 @@ export class UserController extends BaseController {
     super(logger);
     this.logger.info('Register routes for UserController...');
 
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
-    //this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Get,
+      handler: this.index
+    });
     this.addRoute({
       path: '/register',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+      middlewares: [
+        new ValidateDtoMiddleware(CreateUserDto)
+      ]
     });
-    //this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
     this.addRoute({
       path: '/login',
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
+      middlewares: [
+        new ValidateDtoMiddleware(LoginUserDto)
+      ]
     });
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
       ]
