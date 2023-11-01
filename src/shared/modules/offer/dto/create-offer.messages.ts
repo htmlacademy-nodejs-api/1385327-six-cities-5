@@ -1,11 +1,26 @@
+import {
+  MIN_TITLE_LENGTH,
+  MAX_TITLE_LENGTH,
+  MIN_DESCRIPTION_LENGTH,
+  MAX_DESCRIPTION_LENGTH,
+  MIN_IMAGES_COUNT,
+  MIN_ROOM_COUNT,
+  MAX_ROOM_COUNT,
+  MIN_GUEST_COUNT,
+  MAX_GUEST_COUNT,
+  MIN_PRICE,
+  MAX_PRICE,
+  MIN_COORDS_LENGTH
+} from './constant.js';
+
 export const CreateOfferValidationMessage = {
   title: {
     invalidFormat: 'title must be string',
-    length: 'title length must be into range 10 - 100',
+    length: `title length must be into range ${MIN_TITLE_LENGTH} - ${MAX_TITLE_LENGTH}`,
   },
   description: {
     invalidFormat: 'description must be string',
-    length: 'description length must be into range 20 - 1024',
+    length: `description length must be into range ${MIN_DESCRIPTION_LENGTH} - ${MAX_DESCRIPTION_LENGTH}`,
   },
   postDate: {
     invalidFormat: 'postDate must be a valid ISO date',
@@ -18,7 +33,7 @@ export const CreateOfferValidationMessage = {
   },
   photos: {
     invalidFormat: 'images must be array',
-    invalidCount: 'images array length must be 6',
+    invalidCount: `images array length must be ${MIN_IMAGES_COUNT}`,
     invalidValue: 'images must be string',
   },
   isPremium: {
@@ -31,18 +46,18 @@ export const CreateOfferValidationMessage = {
   },
   roomCount: {
     invalidFormat: 'room must be an integer',
-    minValue: 'minimum room is 1',
-    maxValue: 'maximum room is 8',
+    minValue: `minimum room is ${MIN_ROOM_COUNT}`,
+    maxValue: `maximum room is ${MAX_ROOM_COUNT}`,
   },
   guestCount: {
     invalidFormat: 'guest must be an integer',
-    minValue: 'minimum guest is 1',
-    maxValue: 'maximum guest is 10',
+    minValue: `minimum guest is ${MIN_GUEST_COUNT}`,
+    maxValue: `maximum guest is ${MAX_GUEST_COUNT}`,
   },
   rentPrice: {
     invalidFormat: 'price must be an integer',
-    minValue: 'minimum price is 100',
-    maxValue: 'maximum price is 100 000',
+    minValue: `minimum price is ${MIN_PRICE}`,
+    maxValue: `maximum price is ${MAX_PRICE}`,
   },
   features: {
     invalidFormat: 'field categories must be an array',
@@ -50,7 +65,7 @@ export const CreateOfferValidationMessage = {
   //commentsCount: {},
   location: {
     invalidFormat: 'coords must be a array',
-    length: 'coords array length must be 2',
+    length: `coords array length must be ${MIN_COORDS_LENGTH}`,
     invalidValue: 'coords must be string',
   },
   author: {

@@ -2,13 +2,14 @@
 ## Создать комментарий
 
 POST http://localhost:4000/comments HTTP/1.1
+Authorization: Baerer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjY1MzYxOTdkMDFmNGI4NzQwMjMzZTVlZiIsImlhdCI6MTY5ODY2NzYzNCwiZXhwIjoxNjk4ODQwNDM0fQ.emOdmzU6dM_Aelx2zdW6-3S9mtBqqUPaPix-MNEF-mU
 Content-Type: application/json
 
 {
-  "text": "Комент 3",
-  "rating": 4.0,
-  "offerId": "652fa3d32b729346360f52ff",
-  "userId": "652fa3d32b729346360f5302"
+  "text": "Комент 5",
+  "rating": 2,
+  "offerId": "652fa3d32b729346360f52ff"
+  //"userId": "652fa3d32b729346360f5302"
 }
 
 ###
