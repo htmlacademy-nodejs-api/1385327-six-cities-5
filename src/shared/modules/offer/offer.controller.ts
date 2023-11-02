@@ -9,7 +9,8 @@ import {
   ValidateObjectIdMiddleware,
   ValidateDtoMiddleware,
   DocumentExistsMiddleware,
-  PrivateRouteMiddleware
+  PrivateRouteMiddleware,
+  UploadFileMiddleware
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -28,13 +29,17 @@ import { CreateOfferRequest } from './types/create-offer-request.type.js';
 import { CommentService, CommentRdo } from '../comment/index.js';
 import { ParamCityName } from './types/param-cityname.type.js';
 
+import { Config, RestSchema } from '../../libs/config/index.js';
+import { UploadPreviewRdo } from './rdo/upload-preview.rdo.js';
+
 
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
-    @inject(Component.CommentService) private readonly commentService: CommentService
+    @inject(Component.CommentService) private readonly commentService: CommentService,
+    @inject(Component.Config) private readonly configService: Config<RestSchema>,
   ) {
     super(logger);
 
@@ -93,11 +98,20 @@ export class OfferController extends BaseController {
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ]
     });
-
     this.addRoute({
       path: '/:city/premium',
       method: HttpMethod.Get,
       handler: this.findPremiumByCityName
+    });
+    this.addRoute({
+      path: '/:offerId/preview',
+      method: HttpMethod.Post,
+      handler: this.uploadPreview,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
+      ]
     });
   }
 
@@ -156,5 +170,12 @@ export class OfferController extends BaseController {
       );
     }
     this.ok(res, fillDTO(OfferRdo, premiumOffers));
+  }
+
+  public async uploadPreview({ params, file } : Request<ParamOfferId>, res: Response) {
+    const { offerId } = params;
+    const updateDto = { preview: file?.filename };
+    await this.offerService.updateById(offerId, updateDto);
+    this.created(res, fillDTO(UploadPreviewRdo, updateDto));
   }
 }

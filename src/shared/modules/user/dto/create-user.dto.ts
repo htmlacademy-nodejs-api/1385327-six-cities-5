@@ -1,9 +1,9 @@
-import { IsEmail, IsString, Length, IsBoolean, Matches } from 'class-validator';
+import { IsEmail, IsString, Length, IsBoolean } from 'class-validator'; //, Matches
 import { CreateUserValidationMessages } from './create-user.messages.js';
 import {
   MIN_NAME_LENGTH,
   MAX_NAME_LENGTH,
-  IS_JPG_OR_PNG,
+  // IS_JPG_OR_PNG,
   MIN_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH
 } from './constant.js';
@@ -16,9 +16,9 @@ export class CreateUserDto {
   @IsEmail({}, { message: CreateUserValidationMessages.email.invalidFormat })
   public email: string;
 
-  @IsString({ message: CreateUserValidationMessages.avatar.invalidFormat })
-  @Matches(IS_JPG_OR_PNG, {message: CreateUserValidationMessages.avatar.invalidType})
-  public avatar: string;
+  // @IsString({ message: CreateUserValidationMessages.avatar.invalidFormat })
+  // @Matches(IS_JPG_OR_PNG, {message: CreateUserValidationMessages.avatar.invalidType})
+  // public avatar: string;
 
   @IsBoolean({message: CreateUserValidationMessages.isProType.invalidFormat})
   public isProType: boolean;
