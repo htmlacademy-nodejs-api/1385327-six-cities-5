@@ -13,10 +13,10 @@ export const CreateUserValidationMessages = {
   email: {
     invalidFormat: 'email must be a valid address',
   },
-  // avatar: {
-  //   invalidFormat: 'avatar must be string',
-  //   invalidType: 'avatar must be jpg or png format',
-  // },
+  avatar: {
+    invalidFormat: 'avatar must be string',
+    invalidType: 'avatar must be jpg or png format',
+  },
   isProType: {
     invalidFormat: 'isProType must be a boolean',
   },

@@ -62,6 +62,11 @@ export class UserController extends BaseController {
       ]
     });
     this.addRoute({
+      path: '/login',
+      method: HttpMethod.Get,
+      handler: this.checkAuthenticate,
+    });
+    this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
@@ -71,13 +76,9 @@ export class UserController extends BaseController {
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
       ]
     });
-    this.addRoute({
-      path: '/login',
-      method: HttpMethod.Get,
-      handler: this.checkAuthenticate,
-    });
   }
 
+  // список пользователей
   public async index(_req: Request, res: Response): Promise<void> {
     const users = await this.userService.find();
     const responseData = fillDTO(UserRdo, users);
@@ -85,6 +86,7 @@ export class UserController extends BaseController {
     this.ok(res, responseData);
   }
 
+  // создание нового пользователя
   public async create({ body }: CreateUserRequest, res: Response,): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
 
@@ -101,24 +103,16 @@ export class UserController extends BaseController {
     this.created(res, fillDTO(UserRdo, result));
   }
 
+  // авторизация
   public async login({ body }: LoginUserRequest, res: Response,): Promise<void> {
     const user = await this.authService.verify(body);
     const token = await this.authService.authenticate(user);
     const responseData = fillDTO(LoggedUserRdo, user);
+
     this.ok(res, Object.assign(responseData, { token }));
   }
 
-  // public async uploadAvatar(req: Request, res: Response) {
-  //   this.created(res, { filepath: req.file?.path });
-  // }
-
-  public async uploadAvatar({ params, file }: Request, res: Response) {
-    const { userId } = params;
-    const uploadFile = { avatar: file?.filename };
-    await this.userService.updateById(userId, uploadFile);
-    this.created(res, fillDTO(UploadUserAvatarRdo, { filepath: uploadFile.avatar }));
-  }
-
+  // Проверка токена
   public async checkAuthenticate({ tokenPayload: { email }}: Request, res: Response) {// допилить убрать ошибку 500
     const foundedUser = await this.userService.findByEmail(email);
 
@@ -132,4 +126,16 @@ export class UserController extends BaseController {
 
     this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
   }
+
+  // Загрузка аватарки
+  public async uploadAvatar({ params, file }: Request, res: Response) {
+    const { userId } = params;
+    const uploadFile = { avatar: file?.filename };
+    await this.userService.updateById(userId, uploadFile);
+
+    this.created(res, fillDTO(UploadUserAvatarRdo, { filepath: uploadFile.avatar }));
+  }
+  // public async uploadAvatar(req: Request, res: Response) {
+  //   this.created(res, { filepath: req.file?.path });
+  // }
 }

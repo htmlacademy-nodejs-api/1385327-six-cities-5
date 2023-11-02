@@ -18,21 +18,25 @@ export class DefaultUserService implements UserService {
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
+  // Получить список пользователей --------------------------------------------------------------------------------------------- delete ?
   public async find(): Promise<DocumentType<UserEntity>[]> {
     return this.userModel
       .find()
-      //.populate(['author'])
       .exec();
   }
 
+  // Найти user по Id ----------------------------------------------------------------------------------------------------------- delete ?
   public async findById(
     userId: string
   ): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findById(userId).exec();
   }
 
+  // Создать нового пользователя
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-    const user = new UserEntity({ ...dto, avatar: DEFAULT_AVATAR_FILE_NAME });// здесь проверку, если отправили - брать, иначе подставлять
+    // здесь проверку, если отправили - брать, иначе подставлять
+    // const user = new UserEntity(dto);
+    const user = new UserEntity({ ...dto, avatar: DEFAULT_AVATAR_FILE_NAME });
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
@@ -41,11 +45,13 @@ export class DefaultUserService implements UserService {
     return result;
   }
 
+  // Найти user по email
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
     return this.userModel
       .findOne({email});
   }
 
+  // найти или создать ---------------------------------------------------------------------------------------- используется в cli - import
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const existedUser = await this.findByEmail(dto.email);
 
@@ -56,9 +62,11 @@ export class DefaultUserService implements UserService {
     return this.create(dto, salt);
   }
 
+  // Обновить user по Id
   public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
     return this.userModel
       .findByIdAndUpdate(userId, dto, { new: true })
       .exec();
   }
+
 }
