@@ -25,4 +25,6 @@ export const Component = {
   FavoriteController: Symbol.for('FavoriteController'),
 
   ExceptionFilter: Symbol.for('ExceptionFilter'),
+  HttpExceptionFilter: Symbol.for('HttpExceptionFilter'),
+  ValidationExceptionFilter: Symbol.for('ValidationExceptionFilter'),
 } as const;
