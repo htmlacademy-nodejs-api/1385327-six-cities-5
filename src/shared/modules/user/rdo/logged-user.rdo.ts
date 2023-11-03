@@ -4,15 +4,15 @@ export class LoggedUserRdo {
   @Expose()
   public token: string;
 
-  @Expose()
-  public email: string;
+  // @Expose()
+  // public email: string;
 
-  @Expose()
-  public name: string;
+  // @Expose()
+  // public name: string;
 
-  @Expose()
-  public avatarPath: string;
+  // @Expose()
+  // public avatarPath: string;
 
-  @Expose()
-  public isProType: boolean;
+  // @Expose()
+  // public isProType: boolean;
 }

@@ -1,15 +1,16 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
-import { StatusCodes } from 'http-status-codes';
 
 import {
   BaseController,
   HttpMethod,
-  HttpError,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
   UploadFileMiddleware,
-  PrivateRouteMiddleware
+  PrivateRouteMiddleware,
+  PublicRouteMiddleware,
+  UserWithEmailExistsMiddleware,
+  UserExistsMiddleware
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -20,7 +21,7 @@ import { AuthService } from '../auth/index.js';
 
 import { fillDTO } from '../../helpers/common.js';
 
-import { CreateUserDto } from './dto/create-user.dto.js';
+//import { CreateUserDto } from './dto/create-user.dto.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
@@ -28,6 +29,8 @@ import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
 
 import { LoginUserRequest } from './types/login-user-request.type.js';
 import { CreateUserRequest } from './types/create-user-request.type.js';
+
+import mongoose from 'mongoose';
 
 @injectable()
 export class UserController extends BaseController {
@@ -40,7 +43,7 @@ export class UserController extends BaseController {
     super(logger);
     this.logger.info('Register routes for UserController...');
 
-    this.addRoute({
+    this.addRoute({ //-------------------------------------------------------------------------------------------- delete ?
       path: '/',
       method: HttpMethod.Get,
       handler: this.index
@@ -50,7 +53,8 @@ export class UserController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new ValidateDtoMiddleware(CreateUserDto)
+        new PublicRouteMiddleware(),
+        new UserWithEmailExistsMiddleware(this.userService, 'User'),
       ]
     });
     this.addRoute({
@@ -65,6 +69,9 @@ export class UserController extends BaseController {
       path: '/login',
       method: HttpMethod.Get,
       handler: this.checkAuthenticate,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
     });
     this.addRoute({
       path: '/:userId/avatar',
@@ -73,12 +80,13 @@ export class UserController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
+        new UserExistsMiddleware(this.userService, 'User', 'id'),// ----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! переделать (соответствие юзера)
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
       ]
     });
   }
 
-  // список пользователей
+  // список пользователей --------------------------------------------------------------------------------------- delete ?
   public async index(_req: Request, res: Response): Promise<void> {
     const users = await this.userService.find();
     const responseData = fillDTO(UserRdo, users);
@@ -88,16 +96,6 @@ export class UserController extends BaseController {
 
   // создание нового пользователя
   public async create({ body }: CreateUserRequest, res: Response,): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
-
-    if (existsUser) {
-      throw new HttpError(
-        StatusCodes.CONFLICT,
-        `User with email ${body.email} exists.`,
-        'UserController'
-      );
-    }
-
     const result = await this.userService.create(body, this.configService.get('SALT'));
 
     this.created(res, fillDTO(UserRdo, result));
@@ -113,18 +111,11 @@ export class UserController extends BaseController {
   }
 
   // Проверка токена
-  public async checkAuthenticate({ tokenPayload: { email }}: Request, res: Response) {// допилить убрать ошибку 500
-    const foundedUser = await this.userService.findByEmail(email);
+  public async checkAuthenticate({tokenPayload}: Request, res: Response): Promise<void> {
+    const userId = new mongoose.Types.ObjectId(tokenPayload.id);
+    const user = await this.userService.findById(userId);
 
-    if (! foundedUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        'Unauthorized',
-        'UserController'
-      );
-    }
-
-    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+    this.ok(res, fillDTO(UserRdo, user));
   }
 
   // Загрузка аватарки

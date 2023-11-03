@@ -1,5 +1,5 @@
 import { DocumentType } from '@typegoose/typegoose';
-import { DocumentExists } from '../../types/index.js';
+import { DocumentExists } from '../../libs/rest/index.js';
 import { OfferEntity } from './offer.entity.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';

@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
+import { Types } from 'mongoose';
 
 import { Logger } from '../../libs/logger/index.js';
 import { UserService } from './user-service.interface.js';
@@ -20,26 +21,18 @@ export class DefaultUserService implements UserService {
 
   // Получить список пользователей --------------------------------------------------------------------------------------------- delete ?
   public async find(): Promise<DocumentType<UserEntity>[]> {
-    return this.userModel
-      .find()
-      .exec();
-  }
-
-  // Найти user по Id ----------------------------------------------------------------------------------------------------------- delete ?
-  public async findById(
-    userId: string
-  ): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel.findById(userId).exec();
+    return this.userModel.find().exec();
   }
 
   // Создать нового пользователя
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-    // здесь проверку, если отправили - брать, иначе подставлять
+    // здесь проверку, если отправили - брать, иначе подставлять?
     // const user = new UserEntity(dto);
     const user = new UserEntity({ ...dto, avatar: DEFAULT_AVATAR_FILE_NAME });
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
+
     this.logger.info(`New user created: ${user.email}`);
 
     return result;
@@ -47,8 +40,26 @@ export class DefaultUserService implements UserService {
 
   // Найти user по email
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel
-      .findOne({email});
+    return this.userModel.findOne({email});
+  }
+
+  // наличие email в базе
+  public async existsWithEmail(email: string): Promise<boolean> {
+    return await this.userModel.findOne({email}) !== null;
+  }
+
+  // Найти user по Id
+  public async findById(id: Types.ObjectId): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findById(id);
+  }
+
+  public async exists(userId: string): Promise<boolean> {
+    return this.userModel.exists({_id: userId}) !== null;
+  }
+
+  // Обновить user по Id (avatar)
+  public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
   }
 
   // найти или создать ---------------------------------------------------------------------------------------- используется в cli - import
@@ -60,13 +71,6 @@ export class DefaultUserService implements UserService {
     }
 
     return this.create(dto, salt);
-  }
-
-  // Обновить user по Id
-  public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel
-      .findByIdAndUpdate(userId, dto, { new: true })
-      .exec();
   }
 
 }
