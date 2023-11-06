@@ -53,19 +53,30 @@ export class DefaultOfferService implements OfferService {
     { $unset: 'comments' }
   ];
 
+  private authors = [
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'author',
+        foreignField: '_id',
+        as: 'users',
+      },
+    },
+    {
+      $addFields: {
+        author: { $arrayElemAt: ['$users', 0] },
+      },
+    },
+    { $project: { _id: 0 } },
+    { $unset: ['users'], },
+  ];
+
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
     this.logger.info(`New offer created: ${dto.title}`);
 
     return result;
   }
-
-  // public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-  //   return this.offerModel
-  //     .findById(offerId)
-  //     .populate(['author'])
-  //     .exec();
-  // }
 
   public async findById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
@@ -77,6 +88,7 @@ export class DefaultOfferService implements OfferService {
             },
           },
         },
+        ...this.authors,
         ...this.comments,
         ...this.favorites
       ])
@@ -85,23 +97,17 @@ export class DefaultOfferService implements OfferService {
       .then(([result]) => result ?? null);
   }
 
-  // public async find(): Promise<DocumentType<OfferEntity>[]> {
-  //   return this.offerModel
-  //     .find()
-  //     .populate(['author'])
-  //     .exec();
-  // }
-
   public async find(count?: number): Promise<DocumentType<OfferEntity>[]> {
     const limit = count ?? DEFAULT_OFFER_COUNT;
     return this.offerModel
       .aggregate([
+        ...this.authors,
         ...this.comments,
         ...this.favorites,
-        { $sort: { offerCount: SortType.Down } },
+        //{ $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, houseType: 1, price: 1 } },
+        { $sort: { createdAt: SortType.Down } },
         { $limit: limit },
       ])
-      //.populate(['author']) и куда его теперь?
       .exec();
   }
 

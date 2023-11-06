@@ -26,8 +26,7 @@ export class DefaultUserService implements UserService {
 
   // Создать нового пользователя
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-    // здесь проверку, если отправили - брать, иначе подставлять?
-    // const user = new UserEntity(dto);
+
     const user = new UserEntity({ ...dto, avatar: DEFAULT_AVATAR_FILE_NAME });
     user.setPassword(dto.password, salt);
 
@@ -51,10 +50,6 @@ export class DefaultUserService implements UserService {
   // Найти user по Id
   public async findById(id: Types.ObjectId): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findById(id);
-  }
-
-  public async exists(userId: string): Promise<boolean> {
-    return this.userModel.exists({_id: userId}) !== null;
   }
 
   // Обновить user по Id (avatar)

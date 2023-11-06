@@ -116,13 +116,14 @@ export class OfferController extends BaseController {
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find(60);// почему не робит без цифры ...
+    const offers = await this.offerService.find(5);// не робит без цифры ...
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
   public async create({body, tokenPayload}: CreateOfferRequest, res: Response): Promise<void> {
     const result = await this.offerService.create({ ...body, author: tokenPayload.id});
-    const offer = await this.offerService.findById(result.id);//findById
+    const offer = await this.offerService.findById(result.id);
+    //const offer = Object.assign(result , {isFavorite: false , rate: 0, commentsCount: 0});
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
@@ -132,20 +133,37 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
-  public async update({ body, params }: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+  public async update({ body, params, tokenPayload }: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+    const { offerId } = params;
+    const currentOffer = await this.offerService.findById(offerId);
+
+    if (currentOffer && currentOffer.author.toString() !== tokenPayload.id) {
+      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to change the offer');
+    }
+
     const updatedOffer = await this.offerService.updateById(params.offerId, body);
+
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
-  public async delete({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async delete({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
+    const currentOffer = await this.offerService.findById(offerId);
+
+    if (currentOffer && currentOffer.author.toString() !== tokenPayload.id) {
+      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to delete the offer');
+    }
+
     const offer = await this.offerService.deleteById(offerId);
-    await this.commentService.deleteByOfferId(offerId);
+
+    await this.commentService.deleteByOfferId(offerId);// favorite!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     this.noContent(res, offer);
   }
 
   public async getComments({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const comments = await this.commentService.findByOfferId(params.offerId);
+
     this.ok(res, fillDTO(CommentRdo, comments));
   }
 
@@ -169,13 +187,16 @@ export class OfferController extends BaseController {
         'OfferController'
       );
     }
+
     this.ok(res, fillDTO(OfferRdo, premiumOffers));
   }
 
   public async uploadPreview({ params, file } : Request<ParamOfferId>, res: Response) {
     const { offerId } = params;
     const updateDto = { preview: file?.filename };
+
     await this.offerService.updateById(offerId, updateDto);
+
     this.created(res, fillDTO(UploadPreviewRdo, updateDto));
   }
 }

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
-
+import {StatusCodes} from 'http-status-codes';
 import {
   BaseController,
   HttpMethod,
@@ -10,8 +10,8 @@ import {
   PrivateRouteMiddleware,
   PublicRouteMiddleware,
   UserWithEmailExistsMiddleware,
-  UserExistsMiddleware
 } from '../../libs/rest/index.js';
+import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 
@@ -80,7 +80,6 @@ export class UserController extends BaseController {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
-        new UserExistsMiddleware(this.userService, 'User', 'id'),// ----------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! переделать (соответствие юзера)
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
       ]
     });
@@ -119,9 +118,14 @@ export class UserController extends BaseController {
   }
 
   // Загрузка аватарки
-  public async uploadAvatar({ params, file }: Request, res: Response) {
+  public async uploadAvatar({ params, file, tokenPayload }: Request, res: Response) {
+    const id = tokenPayload.id;
     const { userId } = params;
     const uploadFile = { avatar: file?.filename };
+
+    if ( id !== userId ) {
+      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Пользователь не имеет доступ к изменению данного ресурса');
+    }
     await this.userService.updateById(userId, uploadFile);
 
     this.created(res, fillDTO(UploadUserAvatarRdo, { filepath: uploadFile.avatar }));
