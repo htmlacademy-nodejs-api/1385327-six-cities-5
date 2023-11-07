@@ -123,8 +123,8 @@ export class UserController extends BaseController {
     const { userId } = params;
     const uploadFile = { avatar: file?.filename };
 
-    if ( id !== userId ) {
-      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Пользователь не имеет доступ к изменению данного ресурса');
+    if (id !== userId) {
+      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to change avatar');
     }
     await this.userService.updateById(userId, uploadFile);
 

@@ -26,7 +26,7 @@ import { OfferRdo } from './rdo/offer.rdo.js';
 import { ParamOfferId } from './types/param-offerid.type.js';
 import { CreateOfferRequest } from './types/create-offer-request.type.js';
 
-import { CommentService, CommentRdo } from '../comment/index.js';
+import { CommentService, CommentRdo } from '../comment/index.js'; //, CommentRdo
 import { ParamCityName } from './types/param-cityname.type.js';
 
 import { Config, RestSchema } from '../../libs/config/index.js';
@@ -116,14 +116,15 @@ export class OfferController extends BaseController {
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find(5);// не робит без цифры ...
+    const offers = await this.offerService.find(60);// не робит без цифры ...
     this.ok(res, fillDTO(OfferRdo, offers));
   }
 
   public async create({body, tokenPayload}: CreateOfferRequest, res: Response): Promise<void> {
+    // const author = tokenPayload.id;
     const result = await this.offerService.create({ ...body, author: tokenPayload.id});
-    const offer = await this.offerService.findById(result.id);
-    //const offer = Object.assign(result , {isFavorite: false , rate: 0, commentsCount: 0});
+    //const offer = await this.offerService.findById(result.id);
+    const offer = Object.assign(result , {isFavorite: false , rate: 0, commentsCount: 0});
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
@@ -133,11 +134,11 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
-  public async update({ body, params, tokenPayload }: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
+  public async update({ params, tokenPayload, body }: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
     const { offerId } = params;
     const currentOffer = await this.offerService.findById(offerId);
 
-    if (currentOffer && currentOffer.author.toString() !== tokenPayload.id) {
+    if (currentOffer && currentOffer.author._id.toString() !== tokenPayload.id) {
       throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to change the offer');
     }
 
@@ -150,7 +151,7 @@ export class OfferController extends BaseController {
     const { offerId } = params;
     const currentOffer = await this.offerService.findById(offerId);
 
-    if (currentOffer && currentOffer.author.toString() !== tokenPayload.id) {
+    if (currentOffer && currentOffer.author._id.toString() !== tokenPayload.id) {
       throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to delete the offer');
     }
 
