@@ -43,14 +43,24 @@ export class DefaultFavoriteService implements FavoriteService {
       .exec();
   }
 
-  public async createFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity>> {
-    const favorite = await this.favoriteModel.create(dto);
+  // public async createFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity>> {
+  //   const favorite = await this.favoriteModel.create(dto);
 
-    return favorite;
-  }
+  //   return favorite;
+  // }
 
-  public async deleteFavorite({ userId, offerId }: DeleteFavoriteDto) {
-    await this.favoriteModel.findOneAndRemove({ userId: userId, offerId: offerId });
+  // public async deleteFavorite({ userId, offerId }: DeleteFavoriteDto) {
+  //   await this.favoriteModel.findOneAndRemove({ userId: userId, offerId: offerId });
+  // }
+
+  public async createOrDelete(dto: CreateFavoriteDto | DeleteFavoriteDto): Promise<DocumentType<FavoriteEntity> | null> {
+    const isExistFavoriteEntity = await this.favoriteModel.exists(dto) !== null;
+    if (isExistFavoriteEntity) {
+      await this.favoriteModel.findOneAndDelete(dto).exec();
+      return null;
+    } else {
+      return await this.favoriteModel.create(dto);
+    }
   }
 
 }

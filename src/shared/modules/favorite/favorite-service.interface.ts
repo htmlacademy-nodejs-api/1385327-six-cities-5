@@ -10,14 +10,15 @@ import { DeleteFavoriteDto } from './dto/delete-favorite.dto.js';
 export interface FavoriteService {
 
   //find(): Promise<DocumentType<FavoriteEntity>[]>;
-  findByUserId(userId: string): Promise<DocumentType<FavoriteEntity>[] | null>
+  findByUserId(userId: string): Promise<DocumentType<FavoriteEntity>[] | null>;
   //findByUserId(userId: Types.ObjectId): Promise<DocumentType<FavoriteEntity>[]>;
   //findByUserId(userId: string): Promise<DocumentType<OfferEntity>[] | null>
   findByUserOfferId(userId: string, offerId: string): Promise<DocumentType<FavoriteEntity>[]>;
 
 
-  createFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity>>
-  deleteFavorite(dto: DeleteFavoriteDto): Promise<void>
+  // createFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity>>;
+  // deleteFavorite(dto: DeleteFavoriteDto): Promise<void>;
 
+  createOrDelete(dto: CreateFavoriteDto | DeleteFavoriteDto): Promise<DocumentType<FavoriteEntity> | null>;
 }
 
