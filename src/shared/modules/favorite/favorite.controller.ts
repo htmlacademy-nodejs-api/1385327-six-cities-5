@@ -24,7 +24,7 @@ import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
 import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { fillDTO } from '../../helpers/common.js';
 
-import {  DeleteFavoriteRequest } from './types/favorite-request.type.js'; //, IndexFavoriteRequest, CreateFavoriteRequest,
+import { DeleteFavoriteRequest } from './types/favorite-request.type.js'; //, IndexFavoriteRequest, CreateFavoriteRequest,
 import { ParamOfferId } from '../offer/index.js';
 
 import { CreateFavoriteDto } from './dto/create-favorite.dto.js';//, DeleteFavoriteDto
@@ -111,6 +111,7 @@ export class FavoriteController extends BaseController {
 
     this.created(res, fillDTO(FavoriteRdo, favorite));
   }
+
   private async delete(req: DeleteFavoriteRequest, res: Response) {
     const { userId, offerId } = req.params;
 

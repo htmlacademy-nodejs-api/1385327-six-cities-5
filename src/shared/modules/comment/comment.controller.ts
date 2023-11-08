@@ -44,7 +44,7 @@ export class CommentController extends BaseController {
         new ValidateDtoMiddleware(CreateCommentDto)
       ]
     });
-      this.addRoute({
+    this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.getComments,
@@ -63,7 +63,7 @@ export class CommentController extends BaseController {
     this.created(res, fillDTO(CommentRdo, comment));
   }
 
-    public async getComments({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async getComments({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const comments = await this.commentService.findByOfferId(params.offerId);
 
     this.ok(res, fillDTO(CommentRdo, comments));

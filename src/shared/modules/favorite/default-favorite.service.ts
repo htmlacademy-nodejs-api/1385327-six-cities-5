@@ -27,7 +27,7 @@ export class DefaultFavoriteService implements FavoriteService {
   // { $match: { $expr: { $eq: [userId, '$userId'] } } },
 
   public async findByUserId(userId: string): Promise<DocumentType<FavoriteEntity>[]> { // & {offers: OfferEntity}
-      return await this.favoriteModel
+    return await this.favoriteModel
       .aggregate([
         ...aggregateOffer,
         ...aggregateFavorite(userId),
@@ -44,11 +44,7 @@ export class DefaultFavoriteService implements FavoriteService {
   }
 
   public async createFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity>> {
-    let favorite = await this.favoriteModel.create(dto);
-
-    // if (!favorite) {
-    //   favorite = await this.favoriteModel.create({ userId: userId, offerId: offerId });
-    // }
+    const favorite = await this.favoriteModel.create(dto);
 
     return favorite;
   }
