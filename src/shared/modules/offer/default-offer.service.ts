@@ -44,27 +44,12 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel
       .aggregate([
         ...aggregate,
-        { $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, isFavorite: 1, rating: 1, houseType: 1, price: 1, commentCount: 1 } },
+        { $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, isFavorite: 1, rating: 1, housingType: 1, rentPrice: 1, commentsCount: 1 } },
         { $sort: { createdAt: SortType.Down } },
         { $limit: limit },
       ])
       .exec();
   }
-
-  // public async findByUserId(
-  //   userId: string,
-  //   count?: number
-  // ): Promise<DocumentType<OfferEntity>[]> {
-  //   const limit = count ?? DEFAULT_OFFER_COUNT;
-  //   return this.offerModel
-  //     .aggregate([
-  //       ...this.comments,
-  //       ...this.favorites,
-  //       { $limit: limit },
-  //       { $sort: { createdAt: SortType.Down } },
-  //     ])
-  //     .exec();
-  // }
 
   public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
@@ -84,7 +69,6 @@ export class DefaultOfferService implements OfferService {
       .exists({_id: documentId})) !== null;
   }
 
-  // Счетчик коментов
   public async incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, {'$inc': {

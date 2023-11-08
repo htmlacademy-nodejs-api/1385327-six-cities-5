@@ -26,7 +26,7 @@ import { OfferRdo } from './rdo/offer.rdo.js';
 import { ParamOfferId } from './types/param-offerid.type.js';
 import { CreateOfferRequest } from './types/create-offer-request.type.js';
 
-import { CommentService, CommentRdo } from '../comment/index.js'; //, CommentRdo
+import { CommentService } from '../comment/index.js'; //, CommentRdo
 import { ParamCityName } from './types/param-cityname.type.js';
 
 import { Config, RestSchema } from '../../libs/config/index.js';
@@ -90,15 +90,6 @@ export class OfferController extends BaseController {
       ]
     });
     this.addRoute({
-      path: '/:offerId/comments',
-      method: HttpMethod.Get,
-      handler: this.getComments,
-      middlewares: [
-        new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
-      ]
-    });
-    this.addRoute({
       path: '/:city/premium',
       method: HttpMethod.Get,
       handler: this.findPremiumByCityName
@@ -121,10 +112,8 @@ export class OfferController extends BaseController {
   }
 
   public async create({body, tokenPayload}: CreateOfferRequest, res: Response): Promise<void> {
-    // const author = tokenPayload.id;
     const result = await this.offerService.create({ ...body, author: tokenPayload.id});
-    //const offer = await this.offerService.findById(result.id);
-    const offer = Object.assign(result , {isFavorite: false , rate: 0, commentsCount: 0});
+    const offer = await this.offerService.findById(result.id);
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
@@ -160,12 +149,6 @@ export class OfferController extends BaseController {
     await this.commentService.deleteByOfferId(offerId);// favorite!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     this.noContent(res, offer);
-  }
-
-  public async getComments({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
-    const comments = await this.commentService.findByOfferId(params.offerId);
-
-    this.ok(res, fillDTO(CommentRdo, comments));
   }
 
   public async findPremiumByCityName({ params }: Request<ParamCityName>, res: Response): Promise<void> {

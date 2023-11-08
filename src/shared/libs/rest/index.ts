@@ -6,7 +6,6 @@ export * from './types/validation-error-field.type.js';
 export * from './types/application-error.enum.js';
 export * from './types/document-exists.interface.js';
 export * from './types/user-with-email-exists.interface.js';
-//export * from "./types/user-exists.interface.js";
 
 export * from './controller/controller.interface.js';
 export * from './controller/base-controller.abstract.js';
@@ -26,5 +25,3 @@ export * from './middleware/parse-token.middleware.js';
 export * from './middleware/private-route.middleware.js';
 export * from './middleware/public-route.middleware.js';
 export * from './middleware/user-with-email-exists.middleware.js';
-//export * from './middleware/user-exists.middleware.js';
-//export * from './middleware/validate-status.middleware.js';

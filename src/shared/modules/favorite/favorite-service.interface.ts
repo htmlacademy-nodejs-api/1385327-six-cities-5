@@ -1,3 +1,4 @@
+//import { Types } from 'mongoose';
 import { DocumentType } from '@typegoose/typegoose';
 import { FavoriteEntity } from './favorite.entity.js';
 //import { OfferEntity } from '../offer/index.js';
@@ -8,12 +9,15 @@ import { DeleteFavoriteDto } from './dto/delete-favorite.dto.js';
 
 export interface FavoriteService {
 
+  //find(): Promise<DocumentType<FavoriteEntity>[]>;
   findByUserId(userId: string): Promise<DocumentType<FavoriteEntity>[] | null>
+  //findByUserId(userId: Types.ObjectId): Promise<DocumentType<FavoriteEntity>[]>;
   //findByUserId(userId: string): Promise<DocumentType<OfferEntity>[] | null>
+  findByUserOfferId(userId: string, offerId: string): Promise<DocumentType<FavoriteEntity>[]>;
+
+
   createFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity>>
   deleteFavorite(dto: DeleteFavoriteDto): Promise<void>
 
-  // findFavorites(userId: string): Promise<DocumentType<OfferEntity>[]>;
-  // addOrRemoveOfferFavoriteStatus(userId: string, offerId: string, status: string): Promise<DocumentType<OfferEntity> | null>;
 }
 

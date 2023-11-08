@@ -1,6 +1,8 @@
 import { injectable, inject } from 'inversify';
 import { Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
+// import mongoose from 'mongoose';
+// import { DocumentType } from '@typegoose/typegoose';
 
 import {
   BaseController,
@@ -9,30 +11,33 @@ import {
   ValidateDtoMiddleware,
   PrivateRouteMiddleware,
   //ValidateStatusMiddleware
-} from '../../libs/rest/index.js'; //, ValidateObjectIdMiddleware, DocumentExistsMiddleware
+} from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
 
 import { FavoriteService } from './favorite-service.interface.js';
+// import { FavoriteEntity } from './favorite.entity.js';
 // import { OfferService } from '../offer/index.js';
+// import { OfferEntity } from '../offer/index.js';
 
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
 import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { fillDTO } from '../../helpers/common.js';
 
-import { CreateFavoriteRequest, DeleteFavoriteRequest } from './types/favorite-request.type.js'; //, IndexFavoriteRequest
+import {  DeleteFavoriteRequest } from './types/favorite-request.type.js'; //, IndexFavoriteRequest, CreateFavoriteRequest,
+import { ParamOfferId } from '../offer/index.js';
 
 import { CreateFavoriteDto } from './dto/create-favorite.dto.js';//, DeleteFavoriteDto
 import { FavoriteRdo } from './rdo/favorite.rdo.js';
 
-import { OfferRdo } from '../offer/index.js';
+//import { OfferRdo } from '../offer/index.js';
 
 @injectable()
 export class FavoriteController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.FavoriteService) private readonly favoriteService: FavoriteService,
-    // @inject(Component.OfferService) private readonly offerService: OfferService,
+    //@inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     super(logger);
 
@@ -47,14 +52,22 @@ export class FavoriteController extends BaseController {
       ],
     });
     this.addRoute({
-      path: '/',
+      path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateDtoMiddleware(CreateFavoriteDto)
       ],
     });
-    this.addRoute({ path: '/:userId/:offerId', method: HttpMethod.Delete, handler: this.delete });
+    this.addRoute({
+      path: '/:userId/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new PrivateRouteMiddleware()
+      ],
+    });
 
     // this.addRoute({
     //   path: '/',
@@ -76,32 +89,28 @@ export class FavoriteController extends BaseController {
     // });
   }
 
+  public async index({ tokenPayload }: Request, res: Response): Promise<void> {
+    const userId = await this.favoriteService.findByUserId(tokenPayload.id);
+
+    this.ok(res, fillDTO(FavoriteRdo, userId));
+  }
+
   // public async index({ tokenPayload }: Request, res: Response): Promise<void> {
-  //   const offers = await this.favoriteService.findFavorites(tokenPayload.id);
-  //   const responseData = fillDTO(OfferRdo, offers);
-  //   this.ok(res, responseData);
+  //   const userId = await this.favoriteService.findByUserId(tokenPayload.id);
+
+  //   this.ok(res, fillDTO(OfferRdo, userId));
   // }
 
-  public async index(req: Request, res: Response): Promise<void> {
-    const userId = req.tokenPayload.id;
-    const offers = await this.favoriteService.findByUserId(userId);
+  // private async create({body, params, tokenPayload}: CreateFavoriteRequest, res: Response): Promise<void> {
+  //   const favorite = await this.favoriteService.createFavorite({...body, offerId: params.offerId, userId: tokenPayload.id});
 
-    this.ok(res, fillDTO(OfferRdo, offers));
-  }
-
-  // public async update({ tokenPayload, params }: Request, res: Response): Promise<void> {
-  //   const { offerId, status } = params;
-  //   const offer = await this.favoriteService.addOrRemoveOfferFavoriteStatus(tokenPayload.id, offerId, status);
-  //   const responseData = fillDTO(OfferRdo, offer);
-  //   this.ok(res, responseData);
+  //   this.created(res, fillDTO(FavoriteRdo, favorite));
   // }
+  private async create({body, params, tokenPayload}: Request<ParamOfferId>, res: Response): Promise<void> {
+    const favorite = await this.favoriteService.createFavorite({...body, offerId: params.offerId, userId: tokenPayload.id});
 
-  private async create(req: CreateFavoriteRequest, res: Response) {
-    const favorite = await this.favoriteService.createFavorite(req.body);
-
-    this.ok(res, fillDTO(FavoriteRdo, favorite));
+    this.created(res, fillDTO(FavoriteRdo, favorite));
   }
-
   private async delete(req: DeleteFavoriteRequest, res: Response) {
     const { userId, offerId } = req.params;
 
@@ -113,4 +122,5 @@ export class FavoriteController extends BaseController {
 
     this.noContent(res, '');
   }
+
 }

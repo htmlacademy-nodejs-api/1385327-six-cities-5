@@ -1,15 +1,18 @@
 import { inject, injectable } from 'inversify';
-import { types } from '@typegoose/typegoose'; // DocumentType,
+import { types, DocumentType } from '@typegoose/typegoose'; // DocumentType,
 //import { Logger } from '../../libs/logger/index.js';
+//import { Types } from 'mongoose';
 
 import { Component } from '../../types/index.js';//SortType
+import { aggregateComments, aggregateFavorite, aggregateOffer } from './favorite.aggregate.js';
+//import { findByUserId } from './favorite.aggregate.js';
 
 import { FavoriteService } from './favorite-service.interface.js';
 import { FavoriteEntity } from './favorite.entity.js';
 import { CreateFavoriteDto } from './dto/create-favorite.dto.js';
 import { DeleteFavoriteDto } from './dto/delete-favorite.dto.js';
 
-// import { OfferEntity } from '../offer/offer.entity.js';
+//import { OfferEntity } from '../offer/offer.entity.js';
 // import { UserEntity } from '../user/user.entity.js';
 
 @injectable()
@@ -21,18 +24,31 @@ export class DefaultFavoriteService implements FavoriteService {
     // @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
-  public async findByUserId(userId: string) {
-    return await this.favoriteModel
-      .find({ userId })
+  // { $match: { $expr: { $eq: [userId, '$userId'] } } },
+
+  public async findByUserId(userId: string): Promise<DocumentType<FavoriteEntity>[]> { // & {offers: OfferEntity}
+      return await this.favoriteModel
+      .aggregate([
+        ...aggregateOffer,
+        ...aggregateFavorite(userId),
+        ...aggregateComments,
+        //{ $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, isFavorite: 1, rating: 1, housingType: 1, rentPrice: 1, commentsCount: 1 } },
+      ])
       .exec();
   }
 
-  public async createFavorite({ userId, offerId }: CreateFavoriteDto) {
-    let favorite = await this.favoriteModel.findOne({ userId: userId, offerId: offerId });
+  public async findByUserOfferId(userId: string, offerId: string): Promise<DocumentType<FavoriteEntity>[]> {
+    return await this.favoriteModel
+      .find({ userId, offerId })
+      .exec();
+  }
 
-    if (!favorite) {
-      favorite = await this.favoriteModel.create({ userId: userId, offerId: offerId });
-    }
+  public async createFavorite(dto: CreateFavoriteDto): Promise<DocumentType<FavoriteEntity>> {
+    let favorite = await this.favoriteModel.create(dto);
+
+    // if (!favorite) {
+    //   favorite = await this.favoriteModel.create({ userId: userId, offerId: offerId });
+    // }
 
     return favorite;
   }
@@ -40,28 +56,5 @@ export class DefaultFavoriteService implements FavoriteService {
   public async deleteFavorite({ userId, offerId }: DeleteFavoriteDto) {
     await this.favoriteModel.findOneAndRemove({ userId: userId, offerId: offerId });
   }
-  // public async findFavorites(userId: string): Promise<DocumentType<OfferEntity>[]> {
-  //   const { favoriteOffers} = await this.userModel
-  //     .findById(userId)
-  //     .sort({ postDate: SortType.Down })
-  //     .exec() as UserEntity;
-  //   return this.offerModel.find({ '_id': { $in: favoriteOffers } });
-  // }
 
-  // public async addOrRemoveOfferFavoriteStatus(userId: string, offerId: string, status: string) {
-  //   const isSetStatus = status === '1';
-  //   await this.userModel
-  //     .updateOne(
-  //       { _id: userId },
-  //       { [`$${ isSetStatus ? 'push' : 'pull' }`]: { favoriteOffers: offerId } })
-  //     .exec();
-
-  //   this.logger.info(`${ isSetStatus ? 'Add' : 'Remove' } offer id '${ offerId }'
-  //     ${ isSetStatus ? 'in' : 'from' } favorites of user = '${ userId }'`);
-  //   return this
-  //     .offerModel
-  //     .findById(offerId)
-  //     .populate([ 'userId' ])
-  //     .exec();
-  // }
 }

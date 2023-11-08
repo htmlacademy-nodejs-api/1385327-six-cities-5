@@ -8,7 +8,7 @@ Content-Type: application/json
 ## Добавить новое предложение
 POST http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuczI1QG92ZXJsb29rLm5ldCIsImlkIjoiNjU0OWVhMjY0NGRjYTExZmNhNjc5YWNlIiwiaWF0IjoxNjk5MzQyOTE4LCJleHAiOjE2OTk1MTU3MTh9.iDV9Zs32WSVt7Em9JyFO8TvffnORD1AUx02hYT8yNNA
+Authorization: Bearer
 
 {
   "title": "Lorem ipsum dolor sit amet.",
@@ -23,15 +23,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuczI1QG92ZXJsb29rL
   "guestCount": 7,
   "rentPrice": 101,
   "features": ["Breakfast", "Washer"],
-  "location": ["51.225402", "6.776314"],
-  "author": "6549ea2644dca11fca679ace"
+  "location": ["51.225402", "6.776314"]
 }
 
 ###
 
 ## Получение информации по идентификатору
 
-GET http://localhost:4000/offers/6549f04de3175970d2f2c091 HTTP/1.1
+GET http://localhost:4000/offers/654b77c391e6920f44ff84fe HTTP/1.1
 
 ###
 
@@ -39,7 +38,7 @@ GET http://localhost:4000/offers/6549f04de3175970d2f2c091 HTTP/1.1
 
 PATCH http://localhost:4000/offers/6549ea7f44dca11fca679ad1 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuczI1QG92ZXJsb29rLm5ldCIsImlkIjoiNjU0OWVhMjY0NGRjYTExZmNhNjc5YWNlIiwiaWF0IjoxNjk5MzQyOTE4LCJleHAiOjE2OTk1MTU3MTh9.iDV9Zs32WSVt7Em9JyFO8TvffnORD1AUx02hYT8yNNA
+Authorization: Bearer
 
 {
   "title": "title-Lorem ipsum dolor sit amet.",
@@ -52,14 +51,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuczI1QG92ZXJsb29rL
 ## Удалить предложение по идентификатору
 
 DELETE http://localhost:4000/offers/6549ea7f44dca11fca679ad1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuczI1QG92ZXJsb29rLm5ldCIsImlkIjoiNjU0OWVhMjY0NGRjYTExZmNhNjc5YWNlIiwiaWF0IjoxNjk5MzQyOTE4LCJleHAiOjE2OTk1MTU3MTh9.iDV9Zs32WSVt7Em9JyFO8TvffnORD1AUx02hYT8yNNA
-
-###
-
-###
-
-## Список комментариев к предложению
-GET http://localhost:4000/offers/6549f04de3175970d2f2c091/comments HTTP/1.1
+Authorization: Bearer
 
 ###
 
@@ -71,7 +63,7 @@ GET http://localhost:4000/offers/Amsterdam/premium HTTP/1.1
 
 ## Загрузить изображение для объявления
 POST http://localhost:4000/offers/65258514a30fc6ef77c0edf7/preview HTTP/1.1
-//Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJmaXJzdG5hbWUiOiJKYWNrIiwibGFzdG5hbWUiOiJUb3JyYW5jZSIsImlkIjoiNjUyNTk2ZjdlMGE2OTEyZDI5MzA1ZGQ2IiwiaWF0IjoxNjk4Njc3ODAyLCJleHAiOjE2OTg4NTA2MDJ9.HDAdzzjP9Cnfrl9c_TdIzXdjAls2dboO_FU-bScOwmU
+Authorization: Bearer
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -80,7 +72,5 @@ Content-Type: image/png
 
 < /Users/spider_net/Desktop/screen.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
-
-###
 
 ###
