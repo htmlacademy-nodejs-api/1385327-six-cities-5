@@ -40,6 +40,7 @@ export class DefaultOfferService implements OfferService {
 
   public async find(count?: number, userId?: string): Promise<DocumentType<OfferEntity>[]> {
     const limit = count ?? DEFAULT_OFFER_COUNT;
+    //console.log('def----find', userId);
     const aggregate = userId ? [...aggregateComments, ...aggregateFavorite(userId)] : [...aggregateComments, ...aggregateDefaultFavorite];
     return this.offerModel
       .aggregate([

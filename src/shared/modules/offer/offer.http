@@ -2,13 +2,13 @@
 ## Получить список предложений
 GET http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-
+//Authorization: Bearer
 ###
 
 ## Добавить новое предложение
 POST http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjY1NGI3NzZhOTFlNjkyMGY0NGZmODRmYiIsImlhdCI6MTY5OTQ0NDYxMSwiZXhwIjoxNjk5NjE3NDExfQ.5yywCfUVl02l0GiZL_8IGioxMDwRO5TiCRowObo-MMk
+Authorization: Bearer
 
 {
   "title": "66 - Lorem ipsum dolor sit amet.",
@@ -51,7 +51,7 @@ Authorization: Bearer
 ## Удалить предложение по идентификатору
 
 DELETE http://localhost:4000/offers/654c6a3f6fc5a7620465a223 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjY1NGI3NzZhOTFlNjkyMGY0NGZmODRmYiIsImlhdCI6MTY5OTQ0NDYxMSwiZXhwIjoxNjk5NjE3NDExfQ.5yywCfUVl02l0GiZL_8IGioxMDwRO5TiCRowObo-MMk
+Authorization: Bearer
 
 ###
 

@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
-import {StatusCodes} from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
+import mongoose from 'mongoose';
 import {
   BaseController,
   HttpMethod,
@@ -21,7 +22,7 @@ import { AuthService } from '../auth/index.js';
 
 import { fillDTO } from '../../helpers/common.js';
 
-//import { CreateUserDto } from './dto/create-user.dto.js';
+import { CreateUserDto } from './dto/create-user.dto.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
@@ -29,8 +30,6 @@ import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
 
 import { LoginUserRequest } from './types/login-user-request.type.js';
 import { CreateUserRequest } from './types/create-user-request.type.js';
-
-import mongoose from 'mongoose';
 
 @injectable()
 export class UserController extends BaseController {
@@ -42,12 +41,7 @@ export class UserController extends BaseController {
   ) {
     super(logger);
     this.logger.info('Register routes for UserController...');
-    //-------------------------------------------------------------------------------------------- delete ?
-    // this.addRoute({
-    //   path: '/',
-    //   method: HttpMethod.Get,
-    //   handler: this.index
-    // });
+
     this.addRoute({
       path: '/register',
       method: HttpMethod.Post,
@@ -55,6 +49,7 @@ export class UserController extends BaseController {
       middlewares: [
         new PublicRouteMiddleware(),
         new UserWithEmailExistsMiddleware(this.userService, 'User'),
+        new ValidateDtoMiddleware(CreateUserDto)
       ]
     });
     this.addRoute({
@@ -85,14 +80,6 @@ export class UserController extends BaseController {
     });
   }
 
-  // список пользователей --------------------------------------------------------------------------------------- delete ?
-  // public async index(_req: Request, res: Response): Promise<void> {
-  //   const users = await this.userService.find();
-  //   const responseData = fillDTO(UserRdo, users);
-
-  //   this.ok(res, responseData);
-  // }
-
   // создание нового пользователя
   public async create({ body }: CreateUserRequest, res: Response,): Promise<void> {
     const result = await this.userService.create(body, this.configService.get('SALT'));
@@ -110,7 +97,7 @@ export class UserController extends BaseController {
   }
 
   // Проверка токена
-  public async checkAuthenticate({tokenPayload}: Request, res: Response): Promise<void> {
+  public async checkAuthenticate({ tokenPayload }: Request, res: Response): Promise<void> {
     const userId = new mongoose.Types.ObjectId(tokenPayload.id);
     const user = await this.userService.findById(userId);
 
@@ -130,7 +117,5 @@ export class UserController extends BaseController {
 
     this.created(res, fillDTO(UploadUserAvatarRdo, { filepath: uploadFile.avatar }));
   }
-  // public async uploadAvatar(req: Request, res: Response) {
-  //   this.created(res, { filepath: req.file?.path });
-  // }
+
 }

@@ -32,7 +32,6 @@ import { ParamCityName } from './types/param-cityname.type.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
 import { UploadPreviewRdo } from './rdo/upload-preview.rdo.js';
 
-
 @injectable()
 export class OfferController extends BaseController {
   constructor(
@@ -107,9 +106,18 @@ export class OfferController extends BaseController {
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find(60);// не робит без цифры ...
+    const offers = await this.offerService.find(60);
     this.ok(res, fillDTO(OfferRdo, offers));
   }
+
+  // public async index({ query, tokenPayload }: Request, res: Response): Promise<void> {
+  //   const userId = tokenPayload?.id;
+
+  //   console.log(userId);
+  //   const result = await this.offerService.find(Number(query), userId);
+
+  //   this.ok(res,fillDTO(OfferRdo, result));
+  // }
 
   public async create({body, tokenPayload}: CreateOfferRequest, res: Response): Promise<void> {
     const result = await this.offerService.create({ ...body, author: tokenPayload.id});
@@ -128,7 +136,11 @@ export class OfferController extends BaseController {
     const currentOffer = await this.offerService.findById(offerId);
 
     if (currentOffer && currentOffer.author._id.toString() !== tokenPayload.id) {
-      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to change the offer');
+      throw new HttpError(
+        StatusCodes.METHOD_NOT_ALLOWED,
+        'Only the author has the right to change the offer',
+        'OfferController'
+      );
     }
 
     const updatedOffer = await this.offerService.updateById(params.offerId, body);
@@ -141,7 +153,11 @@ export class OfferController extends BaseController {
     const currentOffer = await this.offerService.findById(offerId);
 
     if (currentOffer && currentOffer.author._id.toString() !== tokenPayload.id) {
-      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to delete the offer');
+      throw new HttpError(
+        StatusCodes.METHOD_NOT_ALLOWED,
+        'Only the author has the right to delete the offer',
+        'OfferController'
+      );
     }
 
     const offer = await this.offerService.deleteById(offerId);

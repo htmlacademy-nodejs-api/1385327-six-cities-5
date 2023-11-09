@@ -19,19 +19,12 @@ export class DefaultUserService implements UserService {
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
-  // Получить список пользователей --------------------------------------------------------------------------------------------- delete ?
-  // public async find(): Promise<DocumentType<UserEntity>[]> {
-  //   return this.userModel.find().exec();
-  // }
-
   // Создать нового пользователя
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
-
     const user = new UserEntity({ ...dto, avatar: DEFAULT_AVATAR_FILE_NAME });
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
-
     this.logger.info(`New user created: ${user.email}`);
 
     return result;
@@ -47,17 +40,17 @@ export class DefaultUserService implements UserService {
     return await this.userModel.findOne({email}) !== null;
   }
 
-  // Найти user по Id
+  // Найти user по Id ---------------------------------------------------------------------------------------- (token)
   public async findById(id: Types.ObjectId): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findById(id);
   }
 
-  // Обновить user по Id (avatar)
+  // Обновить user по Id ------------------------------------------------------------------------------------- (avatar)
   public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
   }
 
-  // найти или создать ---------------------------------------------------------------------------------------- используется в cli - import
+  // найти или создать --------------------------------------------------------------------------------------- используется в cli - import
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const existedUser = await this.findByEmail(dto.email);
 
