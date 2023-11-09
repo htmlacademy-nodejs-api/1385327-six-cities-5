@@ -1,8 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { Response, Request } from 'express';
-// import { StatusCodes } from 'http-status-codes';
-//import mongoose from 'mongoose';
-// import { DocumentType } from '@typegoose/typegoose';
+
 
 import {
   BaseController,
@@ -16,29 +14,20 @@ import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
 
 import { FavoriteService } from './favorite-service.interface.js';
-// import { FavoriteEntity } from './favorite.entity.js';
-// import { OfferService } from '../offer/index.js';
-// import { OfferEntity } from '../offer/index.js';
 
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
-//import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { fillDTO } from '../../helpers/common.js';
 
-// import { DeleteFavoriteRequest } from './types/delete-favorite-request.type.js';
-// import { ParamOfferId } from '../offer/index.js';
-
-//import { CreateFavoriteDto } from './dto/create-favorite.dto.js';
 import { FavoriteRdo } from './rdo/favorite.rdo.js';
 import { CreateOrDeleteRequest } from './index.js';
 
-//import { OfferRdo } from '../offer/index.js';
+import { OfferRdo } from '../offer/index.js';
 
 @injectable()
 export class FavoriteController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.FavoriteService) private readonly favoriteService: FavoriteService,
-    //@inject(Component.OfferService) private readonly offerService: OfferService,
   ) {
     super(logger);
 
@@ -52,23 +41,6 @@ export class FavoriteController extends BaseController {
         new PrivateRouteMiddleware()
       ],
     });
-    // this.addRoute({
-    //   path: '/:offerId',
-    //   method: HttpMethod.Post,
-    //   handler: this.create,
-    //   middlewares: [
-    //     new PrivateRouteMiddleware(),
-    //     new ValidateDtoMiddleware(CreateFavoriteDto)
-    //   ],
-    // });
-    // this.addRoute({
-    //   path: '/:userId/:offerId',
-    //   method: HttpMethod.Delete,
-    //   handler: this.delete,
-    //   middlewares: [
-    //     new PrivateRouteMiddleware()
-    //   ],
-    // });
     this.addRoute({
       path: '/',
       method: HttpMethod.Post,
@@ -82,50 +54,27 @@ export class FavoriteController extends BaseController {
     });
   }
 
-  public async index({ tokenPayload }: Request, res: Response): Promise<void> {
-    const userId = await this.favoriteService.findByUserId(tokenPayload.id);
-
-    this.ok(res, fillDTO(FavoriteRdo, userId));
-  }
-
   // public async index({ tokenPayload }: Request, res: Response): Promise<void> {
-
-  //   const userId = await this.favoriteService.findByUserId(tokenPayload.id);
-
-  //   this.ok(res, fillDTO(OfferRdo, userId));
+  //   console.log('token----index', tokenPayload.id);
+  //   const favorites = await this.favoriteService.findByUserId(tokenPayload.id);
+  //   console.log('favorites-----------index', favorites);
+  //   this.ok(res, fillDTO(FavoriteRdo, favorites));
   // }
 
-  // private async create({body, params, tokenPayload}: CreateFavoriteRequest, res: Response): Promise<void> {
-  //   const favorite = await this.favoriteService.createFavorite({...body, offerId: params.offerId, userId: tokenPayload.id});
+  public async index({ tokenPayload }: Request, res: Response): Promise<void> {
+    const favorites = await this.favoriteService.findByUserId(tokenPayload.id);
 
-  //   this.created(res, fillDTO(FavoriteRdo, favorite));
-  // }
-  // private async create({body, params, tokenPayload}: Request<ParamOfferId>, res: Response): Promise<void> {
-  //   const favorite = await this.favoriteService.createFavorite({...body, offerId: params.offerId, userId: tokenPayload.id});
-
-  //   this.created(res, fillDTO(FavoriteRdo, favorite));
-  // }
-
-  // private async delete(req: DeleteFavoriteRequest, res: Response) {
-  //   const { userId, offerId } = req.params;
-
-  //   if (!offerId || !userId) {
-  //     throw new HttpError(StatusCodes.BAD_REQUEST, 'Invalid params');
-  //   }
-
-  //   await this.favoriteService.deleteFavorite({ userId, offerId });
-
-  //   this.noContent(res, '');
-  // }
+    this.ok(res, fillDTO(OfferRdo, favorites));
+  }
 
   private async update({ tokenPayload, body }: CreateOrDeleteRequest, res: Response) {
     const favoriteDto = {
       offerId: body.offerId,
       userId: tokenPayload.id,
     };
-    console.log(favoriteDto);
+
     const result = await this.favoriteService.createOrDelete(favoriteDto);
-    console.log(result);
+
     if (result === null) {
       this.noContent(res, {});
     } else {

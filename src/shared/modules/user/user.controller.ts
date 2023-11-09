@@ -42,12 +42,12 @@ export class UserController extends BaseController {
   ) {
     super(logger);
     this.logger.info('Register routes for UserController...');
-
-    this.addRoute({ //-------------------------------------------------------------------------------------------- delete ?
-      path: '/',
-      method: HttpMethod.Get,
-      handler: this.index
-    });
+    //-------------------------------------------------------------------------------------------- delete ?
+    // this.addRoute({
+    //   path: '/',
+    //   method: HttpMethod.Get,
+    //   handler: this.index
+    // });
     this.addRoute({
       path: '/register',
       method: HttpMethod.Post,
@@ -86,12 +86,12 @@ export class UserController extends BaseController {
   }
 
   // список пользователей --------------------------------------------------------------------------------------- delete ?
-  public async index(_req: Request, res: Response): Promise<void> {
-    const users = await this.userService.find();
-    const responseData = fillDTO(UserRdo, users);
+  // public async index(_req: Request, res: Response): Promise<void> {
+  //   const users = await this.userService.find();
+  //   const responseData = fillDTO(UserRdo, users);
 
-    this.ok(res, responseData);
-  }
+  //   this.ok(res, responseData);
+  // }
 
   // создание нового пользователя
   public async create({ body }: CreateUserRequest, res: Response,): Promise<void> {

@@ -8,13 +8,13 @@ Content-Type: application/json
 ## Добавить новое предложение
 POST http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjY1NGI3NzZhOTFlNjkyMGY0NGZmODRmYiIsImlhdCI6MTY5OTQ0NDYxMSwiZXhwIjoxNjk5NjE3NDExfQ.5yywCfUVl02l0GiZL_8IGioxMDwRO5TiCRowObo-MMk
 
 {
-  "title": "Lorem ipsum dolor sit amet.",
+  "title": "66 - Lorem ipsum dolor sit amet.",
   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "postDate": "2023-11-01T14:14:14.333Z",
-  "city": "Paris",
+  "city": "Amsterdam",
   "preview": "https://www.paris.com/imagePre.jpg",
   "photos": ["https://www.paris.com/image1.jpg", "https://www.paris.com/image2.jpg", "https://www.paris.com/image3.jpg", "https://www.paris.com/image4.jpg", "https://www.paris.com/image5.jpg", "https://www.paris.com/image6.jpg"],
   "isPremium": true,
@@ -50,8 +50,8 @@ Authorization: Bearer
 
 ## Удалить предложение по идентификатору
 
-DELETE http://localhost:4000/offers/6549ea7f44dca11fca679ad1 HTTP/1.1
-Authorization: Bearer
+DELETE http://localhost:4000/offers/654c6a3f6fc5a7620465a223 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuc0BvdmVybG9vay5uZXQiLCJpZCI6IjY1NGI3NzZhOTFlNjkyMGY0NGZmODRmYiIsImlhdCI6MTY5OTQ0NDYxMSwiZXhwIjoxNjk5NjE3NDExfQ.5yywCfUVl02l0GiZL_8IGioxMDwRO5TiCRowObo-MMk
 
 ###
 

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+//import { Types } from 'mongoose';
 
 export const aggregateComments = [
   {
@@ -44,4 +45,8 @@ export const aggregateOffer = ([
       as: 'offers',
     },
   },
+  { $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, isFavorite: 1, rating: 1, housingType: 1, rentPrice: 1, commentsCount: 1 } },
 ]);
+
+// export const findByUserId = (userId: Types.ObjectId) => ({
+//   $match: { $expr: { $eq: [userId, '$userId'] } } });

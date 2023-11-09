@@ -20,9 +20,9 @@ export class DefaultUserService implements UserService {
   ) {}
 
   // Получить список пользователей --------------------------------------------------------------------------------------------- delete ?
-  public async find(): Promise<DocumentType<UserEntity>[]> {
-    return this.userModel.find().exec();
-  }
+  // public async find(): Promise<DocumentType<UserEntity>[]> {
+  //   return this.userModel.find().exec();
+  // }
 
   // Создать нового пользователя
   public async create(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
