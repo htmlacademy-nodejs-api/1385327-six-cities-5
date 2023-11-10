@@ -30,12 +30,12 @@ export class DefaultUserService implements UserService {
     return result;
   }
 
-  // Найти user по email
+  // Найти user по email ------------------------------------------------------------------------------------- (найти или создать -- cli - import)
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findOne({email});
   }
 
-  // наличие email в базе
+  // Наличие email в базе ------------------------------------------------------------------------------------ (middleware)
   public async existsWithEmail(email: string): Promise<boolean> {
     return await this.userModel.findOne({email}) !== null;
   }
@@ -50,7 +50,7 @@ export class DefaultUserService implements UserService {
     return this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
   }
 
-  // найти или создать --------------------------------------------------------------------------------------- используется в cli - import
+  // Найти или создать --------------------------------------------------------------------------------------- (cli - import)
   public async findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>> {
     const existedUser = await this.findByEmail(dto.email);
 

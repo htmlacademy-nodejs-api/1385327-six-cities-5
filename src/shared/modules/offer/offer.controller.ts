@@ -105,6 +105,7 @@ export class OfferController extends BaseController {
     });
   }
 
+  // Список предложений
   public async index(_req: Request, res: Response): Promise<void> {
     const offers = await this.offerService.find(60);
     this.ok(res, fillDTO(OfferRdo, offers));
@@ -119,18 +120,21 @@ export class OfferController extends BaseController {
   //   this.ok(res,fillDTO(OfferRdo, result));
   // }
 
+  // Создание предложения
   public async create({body, tokenPayload}: CreateOfferRequest, res: Response): Promise<void> {
     const result = await this.offerService.create({ ...body, author: tokenPayload.id});
     const offer = await this.offerService.findById(result.id);
     this.created(res, fillDTO(OfferRdo, offer));
   }
 
+  // Показ конкретного предложения
   public async show({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
     const offer = await this.offerService.findById(offerId);
     this.ok(res, fillDTO(OfferRdo, offer));
   }
 
+  // Обновление конкретного предложения
   public async update({ params, tokenPayload, body }: Request<ParamOfferId, unknown, UpdateOfferDto>, res: Response): Promise<void> {
     const { offerId } = params;
     const currentOffer = await this.offerService.findById(offerId);
@@ -148,6 +152,7 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, updatedOffer));
   }
 
+  // Удаление конкретного предложения
   public async delete({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
     const currentOffer = await this.offerService.findById(offerId);
@@ -167,6 +172,7 @@ export class OfferController extends BaseController {
     this.noContent(res, offer);
   }
 
+  // Список премиальных предложений для города
   public async findPremiumByCityName({ params }: Request<ParamCityName>, res: Response): Promise<void> {
     const { city } = params;
 
@@ -191,6 +197,7 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRdo, premiumOffers));
   }
 
+  // Загрузка превью
   public async uploadPreview({ params, file } : Request<ParamOfferId>, res: Response) {
     const { offerId } = params;
     const updateDto = { preview: file?.filename };

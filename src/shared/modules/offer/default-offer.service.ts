@@ -20,6 +20,7 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
 
+  // Создать новое предложение
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
     const result = await this.offerModel.create(dto);
     this.logger.info(`New offer created: ${dto.title}`);
@@ -27,6 +28,7 @@ export class DefaultOfferService implements OfferService {
     return result;
   }
 
+  // Найти offer по id ------------------------------------------------------------------------------------- ()
   public async findById(offerId: string, userId?: string): Promise<DocumentType<OfferEntity> | null> {
     const aggregate = userId ? [...aggregateComments, ...aggregateFavorite(userId), ...aggregateAuthor] : [...aggregateComments, ...aggregateDefaultFavorite, ...aggregateAuthor];
     return this.offerModel
@@ -38,6 +40,7 @@ export class DefaultOfferService implements OfferService {
       .then(([result]) => result ?? null);
   }
 
+  // Найти все предложения ------------------------------------------------------------------------------------- ()
   public async find(count?: number, userId?: string): Promise<DocumentType<OfferEntity>[]> {
     const limit = count ?? DEFAULT_OFFER_COUNT;
     //console.log('def----find', userId);
@@ -52,6 +55,7 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
+  // Обновить по id ------------------------------------------------------------------------------------- ()
   public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, {new: true})
@@ -59,17 +63,20 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
+  // Удалить по id ------------------------------------------------------------------------------------- ()
   public async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndDelete(offerId)
       .exec();
   }
 
+  //  ------------------------------------------------------------------------------------- ()
   public async exists(documentId: string): Promise<boolean> {
     return (await this.offerModel
       .exists({_id: documentId})) !== null;
   }
 
+  // Счетчик комментариев ------------------------------------------------------------------------------------- ()
   public async incCommentCount(offerId: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(offerId, {'$inc': {
@@ -77,6 +84,7 @@ export class DefaultOfferService implements OfferService {
       }}).exec();
   }
 
+  // Найти премиальные предложения для города ----------------------------------------------------------------- ()
   public async findPremiumByCityName(city: string): Promise<DocumentType<OfferEntity>[] | null> {
     return await this.offerModel
       .find({ isPremium: true, city })
