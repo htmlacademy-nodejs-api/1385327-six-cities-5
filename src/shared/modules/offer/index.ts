@@ -7,4 +7,4 @@ export * from './default-offer.service.js';
 export * from './dto/create-offer.dto.js';
 export * from './rdo/offer.rdo.js';
 export * from './rdo/upload-preview.rdo.js';
-export * from './types/param-offerid.type.js';
+export * from './types/offer-request.types.js';

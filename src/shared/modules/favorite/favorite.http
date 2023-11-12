@@ -2,7 +2,6 @@
 ## Все фавориты пользователя
 GET http://localhost:4000/favorites HTTP/1.1
 //Authorization: Bearer
-
 ###
 
 ## Добавить/удалить фавориты
@@ -11,7 +10,7 @@ Content-Type: application/json
 //Authorization: Bearer
 
 {
-  "offerId": "654df470862d0ffa728d62bd"
+  "offerId": "654bb877460df84b50921e49"
 }
 
 ###

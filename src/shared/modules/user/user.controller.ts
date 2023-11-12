@@ -27,9 +27,7 @@ import { LoginUserDto } from './dto/login-user.dto.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
 import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
-
-import { LoginUserRequest } from './types/login-user-request.type.js';
-import { CreateUserRequest } from './types/create-user-request.type.js';
+import { CreateUserRequest, LoginUserRequest } from './types/user-request.type.js';
 
 @injectable()
 export class UserController extends BaseController {

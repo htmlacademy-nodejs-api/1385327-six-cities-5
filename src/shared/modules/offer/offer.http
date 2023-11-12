@@ -4,6 +4,7 @@
 GET http://localhost:4000/offers HTTP/1.1
 Content-Type: application/json
 //Authorization: Bearer
+
 ###
 
 ## Добавить новое предложение
@@ -13,7 +14,7 @@ Content-Type: application/json
 //Authorization: Bearer
 
 {
-  "title": "77 - Lorem ipsum dolor sit amet.",
+  "title": "22 - Lorem ipsum dolor sit amet.",
   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   "postDate": "2023-11-01T14:14:14.333Z",
   "city": "Amsterdam",
@@ -32,27 +33,29 @@ Content-Type: application/json
 
 ## Получение информации по идентификатору
 
-GET http://localhost:4000/offers/654b77c391e6920f44ff84f HTTP/1.1
+GET http://localhost:4000/offers/654bb877460df84b50921e49 HTTP/1.1
+Content-Type: application/json
+//Authorization: Bearer
 
 ###
 
 ## Обновить предложение
 
-PATCH http://localhost:4000/offers/654b77c391e6920f44ff84fe HTTP/1.1
+PATCH http://localhost:4000/offers/654bb877460df84b50921e49 HTTP/1.1
 Content-Type: application/json
 //Authorization: Bearer
 
 {
   "title": "title-Lorem ipsum dolor sit amet.",
   "description": "Проверка обновления. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  "city": "Amsterdam"
+  "city": "Paris"
 }
 
 ###
 
 ## Удалить предложение по идентификатору
 
-DELETE http://localhost:4000/offers/654c6a3f6fc5a7620465a223 HTTP/1.1
+DELETE http://localhost:4000/offers/6550d1b698479893f8c383b0 HTTP/1.1
 //Authorization: Bearer
 
 ###
@@ -60,7 +63,7 @@ DELETE http://localhost:4000/offers/654c6a3f6fc5a7620465a223 HTTP/1.1
 ## Получить премиальные предложения для города
 
 GET http://localhost:4000/offers/Amsterdam/premium HTTP/1.1
-
+//Authorization: Bearer
 ###
 
 ## Загрузить изображение для объявления

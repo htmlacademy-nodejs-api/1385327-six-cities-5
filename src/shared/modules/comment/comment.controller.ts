@@ -19,6 +19,7 @@ import { fillDTO } from '../../helpers/index.js';
 
 import { CreateCommentDto } from './dto/create-comment.dto.js';
 import { CommentRdo } from './rdo/comment.rdo.js';
+import { CreateCommentRequest } from './types/comment-request.type.js';
 
 import { ParamOfferId } from '../offer/index.js';
 
@@ -40,14 +41,15 @@ export class CommentController extends BaseController {
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateCommentDto),
+        new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
-        new ValidateDtoMiddleware(CreateCommentDto)
       ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
-      handler: this.getComments,
+      handler: this.show,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
@@ -55,15 +57,16 @@ export class CommentController extends BaseController {
     });
   }
 
-  public async create({ body, params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
-    const comment = await this.commentService.create({ ...body, offerId: params.offerId, author: tokenPayload.id });
+  public async create({ body, params, tokenPayload }: CreateCommentRequest, res: Response): Promise<void> {
+    const { offerId } = params;
+    const comment = await this.commentService.create({ ...body, offerId, author: tokenPayload.id });
 
     await this.offerService.incCommentCount(body.offerId);
 
     this.created(res, fillDTO(CommentRdo, comment));
   }
 
-  public async getComments({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
+  public async show({ params }: Request<ParamOfferId>, res: Response): Promise<void> {
     const comments = await this.commentService.findByOfferId(params.offerId);
 
     this.ok(res, fillDTO(CommentRdo, comments));

@@ -1,14 +1,10 @@
 import { injectable, inject } from 'inversify';
 import { Response, Request } from 'express';
 
-
 import {
   BaseController,
-  //ValidateObjectIdMiddleware,
-  //DocumentExistsMiddleware,
-  //ValidateDtoMiddleware,
+  ValidateDtoMiddleware,
   PrivateRouteMiddleware,
-  //ValidateStatusMiddleware
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/component.enum.js';
@@ -19,7 +15,8 @@ import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
 import { fillDTO } from '../../helpers/common.js';
 
 import { FavoriteRdo } from './rdo/favorite.rdo.js';
-import { CreateOrDeleteRequest } from './index.js';
+import { CreateFavoriteDto } from './dto/create-favorite.dto.js';
+import { CreateOrDeleteRequest } from './types/favorite-request.type.js';
 
 import { OfferRdo } from '../offer/index.js';
 
@@ -47,17 +44,14 @@ export class FavoriteController extends BaseController {
       handler: this.update,
       middlewares: [
         new PrivateRouteMiddleware(),
-        // new ValidateObjectIdMiddleware('offerId'),
-        // new ValidateStatusMiddleware('status'),
-        // new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId')
+        new ValidateDtoMiddleware(CreateFavoriteDto),
       ]
     });
   }
 
   // public async index({ tokenPayload }: Request, res: Response): Promise<void> {
-  //   console.log('token----index', tokenPayload.id);
   //   const favorites = await this.favoriteService.findByUserId(tokenPayload.id);
-  //   console.log('favorites-----------index', favorites);
+
   //   this.ok(res, fillDTO(FavoriteRdo, favorites));
   // }
 
