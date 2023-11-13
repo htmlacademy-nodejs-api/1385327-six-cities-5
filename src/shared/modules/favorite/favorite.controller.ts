@@ -18,7 +18,7 @@ import { FavoriteRdo } from './rdo/favorite.rdo.js';
 import { CreateFavoriteDto } from './dto/create-favorite.dto.js';
 import { CreateOrDeleteRequest } from './types/favorite-request.type.js';
 
-import { OfferRdo } from '../offer/index.js';
+import { ShortOfferRdo } from '../offer/index.js';
 
 @injectable()
 export class FavoriteController extends BaseController {
@@ -52,7 +52,7 @@ export class FavoriteController extends BaseController {
   public async index({ tokenPayload }: Request, res: Response): Promise<void> {
     const favorites = await this.favoriteService.findByUserId(tokenPayload.id);
 
-    this.ok(res, fillDTO(OfferRdo, favorites));
+    this.ok(res, fillDTO(ShortOfferRdo, favorites));
   }
 
   private async update({ tokenPayload, body }: CreateOrDeleteRequest, res: Response) {

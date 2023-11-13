@@ -7,7 +7,7 @@ export class PublicRouteMiddleware implements Middleware {
   public async execute({ tokenPayload }: Request, _res: Response, next: NextFunction): Promise<void> {
     if (tokenPayload !== undefined) {
       throw new HttpError(
-        StatusCodes.METHOD_NOT_ALLOWED,
+        StatusCodes.FORBIDDEN,
         'Not allow authorized person',
         'PublicRouteMiddleware'
       );
