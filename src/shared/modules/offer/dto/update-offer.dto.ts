@@ -1,6 +1,6 @@
 import { IsOptional, Length, IsString, IsDateString, IsEnum, ArrayMinSize, ArrayMaxSize, IsBoolean, Min, Max, IsInt, IsArray } from 'class-validator';
 import { City, Housing, Feature } from '../../../types/index.js';
-import { CreateOfferValidationMessage } from './create-offer.messages.js';
+import { OfferValidationMessage } from './offer-validation.message.js';
 import {
   MIN_TITLE_LENGTH,
   MAX_TITLE_LENGTH,
@@ -20,75 +20,68 @@ import {
 
 export class UpdateOfferDto {
   @IsOptional()
-  @IsString({message: CreateOfferValidationMessage.title.invalidFormat})
-  @Length(MIN_TITLE_LENGTH, MAX_TITLE_LENGTH, { message: CreateOfferValidationMessage.title.length })
+  @IsString({message: OfferValidationMessage.title.invalidFormat})
+  @Length(MIN_TITLE_LENGTH, MAX_TITLE_LENGTH, { message: OfferValidationMessage.title.length })
   public title?: string;
 
   @IsOptional()
-  @IsString({message: CreateOfferValidationMessage.title.invalidFormat})
-  @Length(MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, { message: CreateOfferValidationMessage.title.length })
+  @IsString({message: OfferValidationMessage.title.invalidFormat})
+  @Length(MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, { message: OfferValidationMessage.title.length })
   public description?: string;
 
   @IsOptional()
-  @IsDateString({}, { message: CreateOfferValidationMessage.postDate.invalidFormat })
+  @IsDateString({}, { message: OfferValidationMessage.postDate.invalidFormat })
   public postDate?: Date;
 
   @IsOptional()
-  @IsEnum(City, { message: CreateOfferValidationMessage.city.invalid })
+  @IsEnum(City, { message: OfferValidationMessage.city.invalid })
   public city?: City;
 
   @IsOptional()
-  @IsString({message: CreateOfferValidationMessage.preview.invalidFormat})
+  @IsString({message: OfferValidationMessage.preview.invalidFormat})
   public preview?: string;
 
   @IsOptional()
-  @IsArray({message: CreateOfferValidationMessage.photos.invalidFormat})
-  @ArrayMinSize(MIN_IMAGES_COUNT, {message: CreateOfferValidationMessage.photos.invalidCount})
-  @ArrayMaxSize(MAX_IMAGES_COUNT, {message: CreateOfferValidationMessage.photos.invalidCount})
-  @IsString({each: true, message: CreateOfferValidationMessage.photos.invalidValue})
+  @IsArray({message: OfferValidationMessage.photos.invalidFormat})
+  @ArrayMinSize(MIN_IMAGES_COUNT, {message: OfferValidationMessage.photos.invalidCount})
+  @ArrayMaxSize(MAX_IMAGES_COUNT, {message: OfferValidationMessage.photos.invalidCount})
+  @IsString({each: true, message: OfferValidationMessage.photos.invalidValue})
   public photos?: string[];
 
   @IsOptional()
-  @IsBoolean({message: CreateOfferValidationMessage.isPremium.invalidFormat})
+  @IsBoolean({message: OfferValidationMessage.isPremium.invalidFormat})
   public isPremium?: boolean;
 
-  // public isFavorite?: boolean;
-  // public rating: number;
-
   @IsOptional()
-  @IsEnum(Housing, { message: CreateOfferValidationMessage.housingType.invalid })
+  @IsEnum(Housing, { message: OfferValidationMessage.housingType.invalid })
   public housingType?: Housing;
 
   @IsOptional()
-  @IsInt({ message: CreateOfferValidationMessage.roomCount.invalidFormat })
-  @Min(MIN_ROOM_COUNT, {message: CreateOfferValidationMessage.roomCount.minValue})
-  @Max(MAX_ROOM_COUNT, {message: CreateOfferValidationMessage.roomCount.maxValue})
+  @IsInt({ message: OfferValidationMessage.roomCount.invalidFormat })
+  @Min(MIN_ROOM_COUNT, {message: OfferValidationMessage.roomCount.minValue})
+  @Max(MAX_ROOM_COUNT, {message: OfferValidationMessage.roomCount.maxValue})
   public roomCount?: number;
 
   @IsOptional()
-  @IsInt({ message: CreateOfferValidationMessage.guestCount.invalidFormat })
-  @Min(MIN_GUEST_COUNT, {message: CreateOfferValidationMessage.guestCount.minValue})
-  @Max(MAX_GUEST_COUNT, {message: CreateOfferValidationMessage.guestCount.maxValue})
+  @IsInt({ message: OfferValidationMessage.guestCount.invalidFormat })
+  @Min(MIN_GUEST_COUNT, {message: OfferValidationMessage.guestCount.minValue})
+  @Max(MAX_GUEST_COUNT, {message: OfferValidationMessage.guestCount.maxValue})
   public guestCount?: number;
 
   @IsOptional()
-  @IsInt({ message: CreateOfferValidationMessage.rentPrice.invalidFormat })
-  @Min(MIN_PRICE, {message: CreateOfferValidationMessage.rentPrice.minValue})
-  @Max(MAX_PRICE, {message: CreateOfferValidationMessage.rentPrice.maxValue})
+  @IsInt({ message: OfferValidationMessage.rentPrice.invalidFormat })
+  @Min(MIN_PRICE, {message: OfferValidationMessage.rentPrice.minValue})
+  @Max(MAX_PRICE, {message: OfferValidationMessage.rentPrice.maxValue})
   public rentPrice?: number;
 
   @IsOptional()
-  @IsArray({message: CreateOfferValidationMessage.features.invalidFormat})
+  @IsArray({message: OfferValidationMessage.features.invalidFormat})
   public features?: Feature[];
 
-  // @IsOptional()
-  // public commentsCount?: number;
-
   @IsOptional()
-  @IsArray({message: CreateOfferValidationMessage.location.invalidFormat})
-  @ArrayMaxSize(MIN_COORDS_LENGTH, {message: CreateOfferValidationMessage.location.length})
-  @ArrayMinSize(MAX_COORDS_LENGTH, {message: CreateOfferValidationMessage.location.length})
-  @IsString({each: true, message: CreateOfferValidationMessage.location.invalidValue})
+  @IsArray({message: OfferValidationMessage.location.invalidFormat})
+  @ArrayMaxSize(MIN_COORDS_LENGTH, {message: OfferValidationMessage.location.length})
+  @ArrayMinSize(MAX_COORDS_LENGTH, {message: OfferValidationMessage.location.length})
+  @IsString({each: true, message: OfferValidationMessage.location.invalidValue})
   public location?: [string, string];
-  // public author: string;
 }

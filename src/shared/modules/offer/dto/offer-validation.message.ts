@@ -13,7 +13,7 @@ import {
   MIN_COORDS_LENGTH
 } from './constant.js';
 
-export const CreateOfferValidationMessage = {
+export const OfferValidationMessage = {
   title: {
     invalidFormat: 'title must be string',
     length: `title length must be into range ${MIN_TITLE_LENGTH} - ${MAX_TITLE_LENGTH}`,
@@ -39,8 +39,6 @@ export const CreateOfferValidationMessage = {
   isPremium: {
     invalidFormat: 'isPremium must be a boolean',
   },
-  //isFavorite: {},
-  //rating: { },
   housingType: {
     invalid: 'houseType must be a houseTypeEnum',
   },
@@ -62,7 +60,6 @@ export const CreateOfferValidationMessage = {
   features: {
     invalidFormat: 'field categories must be an array',
   },
-  //commentsCount: {},
   location: {
     invalidFormat: 'coords must be a array',
     length: `coords array length must be ${MIN_COORDS_LENGTH}`,

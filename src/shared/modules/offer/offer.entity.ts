@@ -17,11 +17,7 @@ export interface OfferEntity extends defaultClasses.Base {}
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class OfferEntity extends defaultClasses.TimeStamps {
   //1
-  @prop({
-    required: true,
-    default: '',
-    trim: true
-  })
+  @prop()
   public title!: string;
 
   //2
@@ -52,12 +48,12 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public isPremium!: boolean;
 
   //8
-  // @prop()
-  // public isFavorite!: boolean;
+  @prop()
+  public isFavorite!: boolean;
 
   //9
-  // @prop()
-  // public rating!: number;
+  @prop()
+  public rating!: number;
 
   //10
   @prop({

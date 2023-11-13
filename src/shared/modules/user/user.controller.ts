@@ -1,16 +1,18 @@
 import { inject, injectable } from 'inversify';
 import { Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
-
+import mongoose from 'mongoose';
 import {
   BaseController,
   HttpMethod,
-  HttpError,
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
   UploadFileMiddleware,
-  PrivateRouteMiddleware
+  PrivateRouteMiddleware,
+  PublicRouteMiddleware,
+  UserWithEmailExistsMiddleware,
 } from '../../libs/rest/index.js';
+import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 
@@ -24,9 +26,8 @@ import { CreateUserDto } from './dto/create-user.dto.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { LoggedUserRdo } from './rdo/logged-user.rdo.js';
-
-import { LoginUserRequest } from './types/login-user-request.type.js';
-import { CreateUserRequest } from './types/create-user-request.type.js';
+import { UploadUserAvatarRdo } from './rdo/upload-user-avatar.rdo.js';
+import { CreateUserRequest, LoginUserRequest } from './types/user-request.type.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -40,15 +41,12 @@ export class UserController extends BaseController {
     this.logger.info('Register routes for UserController...');
 
     this.addRoute({
-      path: '/',
-      method: HttpMethod.Get,
-      handler: this.index
-    });
-    this.addRoute({
       path: '/register',
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PublicRouteMiddleware(),
+        new UserWithEmailExistsMiddleware(this.userService, 'User'),
         new ValidateDtoMiddleware(CreateUserDto)
       ]
     });
@@ -61,76 +59,61 @@ export class UserController extends BaseController {
       ]
     });
     this.addRoute({
+      path: '/login',
+      method: HttpMethod.Get,
+      handler: this.checkAuthenticate,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
+    });
+    this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
-        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY_PATH'), 'avatar'),
       ]
     });
-    this.addRoute({
-      path: '/login',
-      method: HttpMethod.Get,
-      handler: this.checkAuthenticate,
-    });
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const users = await this.userService.find();
-    const responseData = fillDTO(UserRdo, users);
-    this.ok(res, responseData);
-  }
-
-  public async create(
-    { body }: CreateUserRequest,
-    res: Response,
-  ): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
-
-    if (existsUser) {
-      throw new HttpError(
-        StatusCodes.CONFLICT,
-        `User with email ${body.email} exists.`,
-        'UserController'
-      );
-    }
-
+  // создание нового пользователя
+  public async create({ body }: CreateUserRequest, res: Response,): Promise<void> {
     const result = await this.userService.create(body, this.configService.get('SALT'));
+
     this.created(res, fillDTO(UserRdo, result));
   }
 
-  public async login(
-    { body }: LoginUserRequest,
-    res: Response,
-  ): Promise<void> {
+  // авторизация
+  public async login({ body }: LoginUserRequest, res: Response,): Promise<void> {
     const user = await this.authService.verify(body);
     const token = await this.authService.authenticate(user);
-    const responseData = fillDTO(LoggedUserRdo, {
-      email: user.email,
-      token,
-    });
-    this.ok(res, responseData);
+    const responseData = fillDTO(LoggedUserRdo, user);
+
+    this.ok(res, Object.assign(responseData, { token }));
   }
 
-  public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
+  // Проверка токена
+  public async checkAuthenticate({ tokenPayload }: Request, res: Response): Promise<void> {
+    const userId = new mongoose.Types.ObjectId(tokenPayload.id);
+    const user = await this.userService.findById(userId);
+
+    this.ok(res, fillDTO(UserRdo, user));
   }
 
-  public async checkAuthenticate({ tokenPayload: { email }}: Request, res: Response) {// допилить убрать ошибку 500
-    const foundedUser = await this.userService.findByEmail(email);
+  // Загрузка аватарки
+  public async uploadAvatar({ params, file, tokenPayload }: Request, res: Response) {
+    const id = tokenPayload.id;
+    const { userId } = params;
+    const uploadFile = { avatar: file?.filename };
 
-    if (! foundedUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        'Unauthorized',
-        'UserController'
-      );
+    if (id !== userId) {
+      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to change avatar');
     }
+    await this.userService.updateById(userId, uploadFile);
 
-    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+    this.created(res, fillDTO(UploadUserAvatarRdo, { filepath: uploadFile.avatar }));
   }
+
 }

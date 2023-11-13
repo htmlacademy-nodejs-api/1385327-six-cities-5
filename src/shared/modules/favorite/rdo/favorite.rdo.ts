@@ -1,9 +1,8 @@
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 
 export class FavoriteRdo {
-  @Expose()
-  public userId: string;
 
   @Expose()
+  @Transform((query) => query.obj['offerId'])
   public offerId: string;
 }

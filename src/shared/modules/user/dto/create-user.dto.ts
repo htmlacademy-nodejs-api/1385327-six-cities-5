@@ -1,5 +1,5 @@
 import { IsEmail, IsString, Length, IsBoolean, Matches } from 'class-validator';
-import { CreateUserValidationMessages } from './create-user.messages.js';
+import { UserValidationMessage } from './user-validation.message.js';
 import {
   MIN_NAME_LENGTH,
   MAX_NAME_LENGTH,
@@ -9,21 +9,21 @@ import {
 } from './constant.js';
 
 export class CreateUserDto {
-  @IsString({ message: CreateUserValidationMessages.name.invalidFormat })
-  @Length(MIN_NAME_LENGTH, MAX_NAME_LENGTH, { message: CreateUserValidationMessages.name.lengthField })
+  @IsString({ message: UserValidationMessage.name.invalidFormat })
+  @Length(MIN_NAME_LENGTH, MAX_NAME_LENGTH, { message: UserValidationMessage.name.lengthField })
   public name: string;
 
-  @IsEmail({}, { message: CreateUserValidationMessages.email.invalidFormat })
+  @IsEmail({}, { message: UserValidationMessage.email.invalidFormat })
   public email: string;
 
-  @IsString({ message: CreateUserValidationMessages.avatar.invalidFormat })
-  @Matches(IS_JPG_OR_PNG, {message: CreateUserValidationMessages.avatar.invalidType})
+  @IsString({ message: UserValidationMessage.avatar.invalidFormat })
+  @Matches(IS_JPG_OR_PNG, {message: UserValidationMessage.avatar.invalidType})
   public avatar: string;
 
-  @IsBoolean({message: CreateUserValidationMessages.isProType.invalidFormat})
+  @IsBoolean({message: UserValidationMessage.isProType.invalidFormat})
   public isProType: boolean;
 
-  @IsString({ message: CreateUserValidationMessages.password.invalidFormat })
-  @Length(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, { message: CreateUserValidationMessages.password.lengthField })
+  @IsString({ message: UserValidationMessage.password.invalidFormat })
+  @Length(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, { message: UserValidationMessage.password.lengthField })
   public password: string;
 }

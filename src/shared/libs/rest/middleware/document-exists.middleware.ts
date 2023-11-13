@@ -1,6 +1,6 @@
 import { Middleware } from './middleware.interface.js';
 import { NextFunction, Request, Response } from 'express';
-import { DocumentExists } from '../../../types/index.js';
+import { DocumentExists } from '../index.js';
 import { HttpError } from '../errors/index.js';
 import { StatusCodes } from 'http-status-codes';
 
