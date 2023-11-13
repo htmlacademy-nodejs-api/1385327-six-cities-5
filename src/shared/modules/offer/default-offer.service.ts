@@ -30,17 +30,6 @@ export class DefaultOfferService implements OfferService {
   }
 
   // Найти offer по id ------------------------------------------------------------------------------------- ()
-  // public async findById(offerId: string, userId?: string): Promise<DocumentType<OfferEntity> | null> {
-  //   //const aggregate = userId ? [...aggregateComments, ...aggregateFavorite(userId), ...aggregateAuthor] : [...aggregateComments, ...aggregateDefaultFavorite, ...aggregateAuthor];
-  //   const aggregate = userId ? [...aggregateComments, ...aggregateAuthor] : [...aggregateComments, ...aggregateAuthor];
-  //   return this.offerModel
-  //     .aggregate([
-  //       { $match: { $expr: { $eq: ['$_id', { $toObjectId: offerId }], }, }, },
-  //       ...aggregate
-  //     ])
-  //     .exec()
-  //     .then(([result]) => result ?? null);
-  // }
   public async findById(offerId: string) {
     return await this.offerModel.findById(offerId).populate('author');
   }

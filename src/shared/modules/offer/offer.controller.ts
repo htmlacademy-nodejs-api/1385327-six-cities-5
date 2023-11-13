@@ -10,36 +10,28 @@ import {
   ValidateDtoMiddleware,
   DocumentExistsMiddleware,
   PrivateRouteMiddleware,
-  //UploadFileMiddleware
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js'; //City,
 
 import { OfferService } from './offer-service.interface.js';
 import { FavoriteService } from '../favorite/index.js';
+import { CommentService } from '../comment/index.js';
 
 import { fillDTO } from '../../helpers/index.js';
+import { City } from '../../types/index.js';
 
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
-
 import { OfferRdo } from './rdo/offer.rdo.js';
-
 import {
   FindRequest,
   ShowOfferRequest,
   CreateOfferRequest,
   UpdateOfferRequest,
-  //DeleteOfferRequest,
   ParamOfferId,
   ParamCityName,
 } from './types/offer-request.types.js';
-
-import { CommentService } from '../comment/index.js';
-import { City } from '../../types/index.js';
-
-//import { Config, RestSchema } from '../../libs/config/index.js';
-//import { UploadPreviewRdo } from './rdo/upload-preview.rdo.js';
 
 @injectable()
 export class OfferController extends BaseController {
@@ -48,7 +40,6 @@ export class OfferController extends BaseController {
     @inject(Component.OfferService) private readonly offerService: OfferService,
     @inject(Component.FavoriteService) private readonly favoriteService: FavoriteService,
     @inject(Component.CommentService) private readonly commentService: CommentService,
-    //@inject(Component.Config) private readonly configService: Config<RestSchema>,
   ) {
     super(logger);
 
@@ -102,20 +93,7 @@ export class OfferController extends BaseController {
       path: '/:city/premium',
       method: HttpMethod.Get,
       handler: this.findPremiumByCityName,
-      middlewares: [
-        //new ValidateDtoMiddleware(),
-      ]
     });
-    // this.addRoute({
-    //   path: '/:offerId/preview',
-    //   method: HttpMethod.Post,
-    //   handler: this.uploadPreview,
-    //   middlewares: [
-    //     new PrivateRouteMiddleware(),
-    //     new ValidateObjectIdMiddleware('offerId'),
-    //     new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
-    //   ]
-    // });
   }
 
   // Список предложений
@@ -169,7 +147,7 @@ export class OfferController extends BaseController {
   }
 
   // Удаление конкретного предложения
-  public async delete({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> { // favorite!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  public async delete({ params, tokenPayload }: Request<ParamOfferId>, res: Response): Promise<void> {
     const { offerId } = params;
     const userId = tokenPayload.id;
 
@@ -202,32 +180,22 @@ export class OfferController extends BaseController {
     if (!cityName) {
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
-        'Bad request. Сity not specified.',
+        'Bad request. City not specified.',
         'OfferController'
       );
     }
 
     const premiumOffers = await this.offerService.findPremiumByCityName(city, userId);
 
-    if (!premiumOffers) {
-      // throw new HttpError(
-      //   StatusCodes.NOT_FOUND,
-      //   'Premium offers not found',
-      //   'OfferController'
-      // );
-      this.logger.info(`Premium offers from ${city} not found`);
+    if (premiumOffers?.length === 0) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Premium offers for ${city} not found`,
+        'OfferController'
+      );
     }
 
     this.ok(res, fillDTO(OfferRdo, premiumOffers));
   }
 
-  // Загрузка превью
-  // public async uploadPreview({ params, file } : Request<ParamOfferId>, res: Response) {
-  //   const { offerId } = params;
-  //   const updateDto = { preview: file?.filename };
-
-  //   await this.offerService.updateById(offerId, updateDto);
-
-  //   this.created(res, fillDTO(UploadPreviewRdo, updateDto));
-  // }
 }

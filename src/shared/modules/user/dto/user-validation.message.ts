@@ -5,7 +5,7 @@ import {
   MAX_PASSWORD_LENGTH
 } from './constant.js';
 
-export const CreateUserValidationMessages = {
+export const UserValidationMessage = {
   name: {
     invalidFormat: 'name must be string',
     lengthField: `name length must be into range ${MIN_NAME_LENGTH} - ${MAX_NAME_LENGTH}`,

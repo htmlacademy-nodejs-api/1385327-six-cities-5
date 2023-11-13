@@ -13,6 +13,6 @@ Content-Type: application/json
 
 ## Получить список комментариев к офферу
 
-GET http://localhost:4000/comments/654bb877460df84b50921e49 HTTP/1.1
+GET http://localhost:4000/comments/654b77c391e6920f44ff84fe HTTP/1.1
 
 ###

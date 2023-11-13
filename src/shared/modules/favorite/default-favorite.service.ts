@@ -1,8 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { types, DocumentType } from '@typegoose/typegoose';
 import { Logger } from '../../libs/logger/index.js';
-//import { Types } from 'mongoose';
-//import mongoose from 'mongoose';
 
 import { Component } from '../../types/index.js';
 import { aggregateFavorite } from './favorite.aggregate.js';
@@ -22,17 +20,6 @@ export class DefaultFavoriteService implements FavoriteService {
     @inject(Component.FavoriteModel) private readonly favoriteModel: types.ModelType<FavoriteEntity>,
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
   ) {}
-
-  // public async findByUserId(userId: string): Promise<DocumentType<FavoriteEntity>[]> {
-  //   return await this.favoriteModel
-  //     .aggregate([
-  //       ...aggregateComments,
-  //       ...aggregateFavorite(userId),
-  //       { $match: { $expr: { $eq: [ '$isFavorite', true ] } } },
-  //       { $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, isFavorite: 1, rating: 1, housingType: 1, rentPrice: 1, commentsCount: 1 } },
-  //     ])
-  //     .exec();
-  // }
 
   public async findByUserId(userId: string): Promise<DocumentType<OfferEntity>[]> {
 

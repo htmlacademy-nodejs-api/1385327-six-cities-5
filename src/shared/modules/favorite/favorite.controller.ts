@@ -49,12 +49,6 @@ export class FavoriteController extends BaseController {
     });
   }
 
-  // public async index({ tokenPayload }: Request, res: Response): Promise<void> {
-  //   const favorites = await this.favoriteService.findByUserId(tokenPayload.id);
-
-  //   this.ok(res, fillDTO(FavoriteRdo, favorites));
-  // }
-
   public async index({ tokenPayload }: Request, res: Response): Promise<void> {
     const favorites = await this.favoriteService.findByUserId(tokenPayload.id);
 

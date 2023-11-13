@@ -1,5 +1,5 @@
 import { IsString, Length, Matches } from 'class-validator';
-import { CreateUserValidationMessages } from './create-user.messages.js';
+import { UserValidationMessage } from './user-validation.message.js';
 import {
   MIN_NAME_LENGTH,
   MAX_NAME_LENGTH,
@@ -8,11 +8,11 @@ import {
 
 export class UpdateUserDto {
 
-  @IsString({ message: CreateUserValidationMessages.name.invalidFormat })
-  @Length(MIN_NAME_LENGTH, MAX_NAME_LENGTH, { message: CreateUserValidationMessages.name.lengthField })
+  @IsString({ message: UserValidationMessage.name.invalidFormat })
+  @Length(MIN_NAME_LENGTH, MAX_NAME_LENGTH, { message: UserValidationMessage.name.lengthField })
   public name?: string;
 
-  @IsString({ message: CreateUserValidationMessages.avatar.invalidFormat })
-  @Matches(IS_JPG_OR_PNG, {message: CreateUserValidationMessages.avatar.invalidType})
+  @IsString({ message: UserValidationMessage.avatar.invalidFormat })
+  @Matches(IS_JPG_OR_PNG, {message: UserValidationMessage.avatar.invalidType})
   public avatar?: string;
 }

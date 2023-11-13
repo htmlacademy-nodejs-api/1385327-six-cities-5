@@ -1,5 +1,4 @@
 import got from 'got';
-// import { appendFile } from 'node:fs/promises';
 import { Command } from './commands.interface.js';
 import { MockServerData } from '../../shared/types/mock-server-data.type.js';
 import { TSVOfferGenerator } from '../../shared/libs/offer-generator/tsv-offer-generator.js';
@@ -23,12 +22,6 @@ export class GenerateCommand implements Command {
     const tsvFileWriter = new TSVFileWriter(filepath);
 
     for (let i = 0; i < offerCount; i++) {
-    //   await appendFile(
-    //     filepath,
-    //     `${tsvOfferGenerator.generate()}\n`,
-    //     { encoding: 'utf8' }
-    //   );
-    // }
       await tsvFileWriter.write(tsvOfferGenerator.generate());
     }
   }
@@ -47,10 +40,6 @@ export class GenerateCommand implements Command {
       console.info(`File ${filepath} was created!`);
     } catch (error: unknown) {
       console.error('Can\'t generate data');
-
-      // if (error instanceof Error) {
-      //   console.error(error.message);
-      // }
       console.error(getErrorMessage(error));
       console.error(error);
     }

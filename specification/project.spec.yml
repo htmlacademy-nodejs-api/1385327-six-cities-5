@@ -6,13 +6,13 @@ info:
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-  version: 2.0.0
+  version: 2.0.1
 
 tags:
   - name: offers
-    description: Действия с объявлениями.
+    description: Действия с предложениями.
   - name: users
-    description: Действия с пользователем.
+    description: Действия с пользователями.
   - name: comments
     description: Действия с комментариями.
   - name: favorites
@@ -24,15 +24,12 @@ paths:
       tags:
         - offers
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
       summary: Создание нового предложения по аренде.
       description: Создает новое предложение по аренде.
 
@@ -40,7 +37,7 @@ paths:
         - BearerAuth: []
 
       requestBody:
-        description: Информация для создания нового предложения.
+        description: Данные для создания нового предложения по аренде.
         content:
           application/json:
             schema:
@@ -66,10 +63,24 @@ paths:
         - offers
       summary: Получение списка предложений по аренде.
       description: Получает список предложений по аренде.
+      parameters:
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: false
+        - name: size
+          in: query
+          description: Количество выводимых предложений по аренде.
+          schema:
+            type: number
+            example: 60
+          required: false
 
       responses:
         "200":
-          description: Получение списка предложений.
+          description: Список предложений по аренде. По умолчанию выводит первых 60 предложений отсортированных по дате публикации (по убыванию).
           content:
             application/json:
               schema:
@@ -81,8 +92,22 @@ paths:
     get:
       tags:
         - offers
-      summary: Получение детальной информации о предложении.
-      description: Получает детальную информации о предложении по аренде.
+      summary: Получение детальной информации по предложению аренды.
+      description: Получает детальную информации по предложению аренды.
+      parameters:
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: false
+        - name: offerId
+          in: path
+          description: Id запрашиваемого предложения.
+          schema:
+            type: string
+            example: 654b77c391e6920f44ff84fe
+          required: true
 
       responses:
         "200":
@@ -93,21 +118,28 @@ paths:
                 $ref: "#/components/schemas/offerRdo"
 
         "400":
-          description: Ошибка запроса.
+          description: Указаны некорректные данные.
+
+        "404":
+          description: Предложение не найдено.
 
     patch:
       tags:
         - offers
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
+        - name: offerId
+          in: path
+          description: Id запрашиваемого предложения.
+          schema:
+            type: string
+            example: 654b77c391e6920f44ff84fe
+          required: true
       summary: Редактирование предложения.
       description: Редактирует предложение по аренде.
 
@@ -124,7 +156,7 @@ paths:
 
       responses:
         "200":
-          description: Предложение успешно отредактировано.
+          description: Предложение успешно отредактировано. Объект предложения.
           content:
             application/json:
               schema:
@@ -136,6 +168,9 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
+        "404":
+          description: Предложение не найдено.
+
         "405":
           description: Только владелец может вносить изменения в объект.
 
@@ -143,15 +178,19 @@ paths:
       tags:
         - offers
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
+        - name: offerId
+          in: path
+          description: Id запрашиваемого предложения.
+          schema:
+            type: string
+            example: 654b77c391e6920f44ff84fe
+          required: true
       summary: Удаление предложения.
       description: Удаляет предложение по аренде.
 
@@ -168,6 +207,9 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
+        "404":
+          description: Предложение не найдено.
+
         "405":
           description: Только владелец может удалять объект.
 
@@ -175,12 +217,26 @@ paths:
     get:
       tags:
         - offers
-      summary: Получение премиальных предложений в городе.
-      description: Получает список премиальных предложений (не более 3 с флагом «Premium»).
+      summary: Получение премиальных предложений по городу.
+      description: Получает список премиальных предложений по городу.
+      parameters:
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: false
+        - name: city
+          in: path
+          description: Название города для поиска премиальных предложений.
+          schema:
+            type: string
+            example: Paris
+          required: true
 
       responses:
         "200":
-          description: Список премиальных предложений. Объект предложения.
+          description: Список премиальных предложений. Объекты предложения не более 3 с флагом «Premium».
           content:
             application/json:
               schema:
@@ -189,13 +245,16 @@ paths:
                   $ref: "#/components/schemas/shortOfferRdo"
 
         "400":
-          description: Ошибка запроса.
+          description: Указаны некорректные данные.
+
+        "404":
+          description: Предложения не найдены.
 
   /users/register:
     post:
       tags:
         - users
-      summary: Регистрация пользователя.
+      summary: Регистрация нового пользователя.
       description: Регистрирует нового пользователя.
 
       requestBody:
@@ -215,7 +274,7 @@ paths:
                 $ref: "#/components/schemas/userRdo"
 
         "400":
-          description: Неправильные регистрационные данные.
+          description: Некорректные данные.
 
         "405":
           description: Создавать новых пользователей могут только анонимные клиенты.
@@ -256,15 +315,12 @@ paths:
       tags:
         - users
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
       summary: Проверка состояния пользователя.
       description: Возвращает информацию по авторизованному пользователю.
 
@@ -287,17 +343,14 @@ paths:
       tags:
         - users
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
-      summary: Загрузить изображение аватара.
-      description: Загружает изображение аватара пользователя.
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
+      summary: Загрузка изображения (аватара) для пользователя.
+      description: Загружает изображение (аватар) пользователя.
 
       security:
         - BearerAuth: []
@@ -319,7 +372,7 @@ paths:
                 $ref: "#/components/schemas/uploadUserAvatarRdo"
 
         "400":
-          description: Пользователя не существует (Неправильные данные).
+          description: Некорректные данные (пользователь не существует).
 
         "401":
           description: Пользователь не авторизован.
@@ -332,16 +385,20 @@ paths:
       tags:
         - comments
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
-      summary: Добавляет комментарий.
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
+        - name: offerId
+          in: path
+          description: Id предложения к которому пишется комментарий.
+          schema:
+            type: string
+            example: 654b77c391e6920f44ff84fe
+          required: true
+      summary: Добавление комментария к предложению.
       description: Добавляет новый комментарий к предложению.
 
       security:
@@ -364,23 +421,31 @@ paths:
                 $ref: "#/components/schemas/commentRdo"
 
         "400":
-          description: Неправильные данные.
+          description: Некорректные данные.
 
         "401":
           description: Пользователь не авторизован.
 
         "404":
-          description: Файл не найден.
+          description: Предложение не найдено.
 
     get:
       tags:
         - comments
+      parameters:
+        - name: offerId
+          in: path
+          description: Id предложения к которому ищутся комментарий.
+          schema:
+            type: string
+            example: 654b77c391e6920f44ff84fe
+          required: true
       summary: Получение списка комментариев для предложения.
       description: Получает список комментариев для предложения.
 
       responses:
         "200":
-          description: Получение комментариев. Массив объектов комментариев.
+          description: Список комментариев к предложению. (не более 50, отсортированы по дате (по убыванию))
           content:
             application/json:
               schema:
@@ -389,22 +454,19 @@ paths:
                   $ref: "#/components/schemas/commentRdo"
 
         "400":
-          description: Ошибка запроса.
+          description: Некорректные данные.
 
   /favorites:
     get:
       tags:
         - favorites
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
       summary: Получение списка избранных предложений.
       description: Получает список избранных предложений.
 
@@ -413,7 +475,7 @@ paths:
 
       responses:
         "200":
-          description: Получение списка избранных предложений. Массив объектов предложений.
+          description: Список избранных предложений пользователя.
           content:
             application/json:
               schema:
@@ -422,7 +484,7 @@ paths:
                   $ref: "#/components/schemas/shortOfferRdo"
 
         "400":
-          description: Ошибка запроса.
+          description: Некорректные данные.
 
         "401":
           description: Пользователь не авторизован.
@@ -431,15 +493,19 @@ paths:
       tags:
         - favorites
       parameters:
-        [
-          {
-            in: "header",
-            name: "x-token",
-            required: true,
-            schema: { type: "string" },
-            description: Токен пользователя.,
-          },
-        ]
+        - name: x-token
+          in: header
+          description: Токен пользователя.
+          schema:
+            type: string
+          required: true
+        - name: offerId
+          in: path
+          description: Id предложения для добавления и удаления в/из списка избранных.
+          schema:
+            type: string
+            example: 654b77c391e6920f44ff84fe
+          required: true
       summary: Добавляет и удаляет предложение в/из списка избранных.
       description: Добавление и удаление предложения в/из списка избранных.
 
@@ -458,7 +524,7 @@ paths:
           description: Удаляет предложение из списка избранных.
 
         "400":
-          description: Ошибка запроса.
+          description: Некорректные данные.
 
         "401":
           description: Пользователь не авторизован.
@@ -476,7 +542,13 @@ components:
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         city:
           type: string
-          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          enum:
+            - Paris
+            - Amsterdam
+            - Cologne
+            - Brussels
+            - Dusseldorf
+            - Hamburg
           example: Dusseldorf
         preview:
           type: string
@@ -499,7 +571,11 @@ components:
           example: true
         housingTypeType:
           type: string
-          enum: [apartment, house, room, hotel]
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
           example: house
         roomCount:
           type: number
@@ -515,15 +591,13 @@ components:
           items:
             type: string
             enum:
-              [
-                Breakfast,
-                Air conditioning,
-                Laptop friendly workspace,
-                Baby seat,
-                Washer,
-                Towels,
-                Fridge,
-              ]
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
           example: [Breakfast, Towels]
         location:
           type: array
@@ -546,7 +620,13 @@ components:
           example: "2023-10-17T11:11:11.111Z"
         city:
           type: string
-          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          enum:
+            - Paris
+            - Amsterdam
+            - Cologne
+            - Brussels
+            - Dusseldorf
+            - Hamburg
           example: Dusseldorf
         preview:
           type: string
@@ -575,7 +655,11 @@ components:
           example: 0
         housingType:
           type: string
-          enum: [apartment, house, room, hotel]
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
           example: house
         roomCount:
           type: number
@@ -591,15 +675,13 @@ components:
           items:
             type: string
             enum:
-              [
-                Breakfast,
-                Air conditioning,
-                Laptop friendly workspace,
-                Baby seat,
-                Washer,
-                Towels,
-                Fridge,
-              ]
+              - Breakfast
+              - Air conditioning
+              - Laptop friendly workspace
+              - Baby seat
+              - Washer
+              - Towels
+              - Fridge
           example: [Breakfast, Towels]
         commentsCount:
           type: number
@@ -621,10 +703,16 @@ components:
         postDate:
           type: string
           format: date-time
-          example: "2023-10-17T11:11:11.111Z"
+          example: 2023-10-17T11:11:11.111Z
         city:
           type: string
-          enum: [Paris, Amsterdam, Cologne, Brussels, Dusseldorf, Hamburg]
+          enum:
+            - Paris
+            - Amsterdam
+            - Cologne
+            - Brussels
+            - Dusseldorf
+            - Hamburg
           example: Dusseldorf
         preview:
           type: string
@@ -640,7 +728,11 @@ components:
           example: 0
         housingType:
           type: string
-          enum: [apartment, house, room, hotel]
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
           example: house
         rentPrice:
           type: number
@@ -750,5 +842,9 @@ components:
       properties:
         offerId:
           $ref: "#/components/schemas/shortOfferRdo"
-        userId:
-          $ref: "#/components/schemas/userRdo"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
