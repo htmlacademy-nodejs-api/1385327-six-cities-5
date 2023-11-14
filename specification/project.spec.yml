@@ -171,7 +171,7 @@ paths:
         "404":
           description: Предложение не найдено.
 
-        "405":
+        "403":
           description: Только владелец может вносить изменения в объект.
 
     delete:
@@ -210,7 +210,7 @@ paths:
         "404":
           description: Предложение не найдено.
 
-        "405":
+        "403":
           description: Только владелец может удалять объект.
 
   /offers/{cityName}/premium:
@@ -276,7 +276,7 @@ paths:
         "400":
           description: Некорректные данные.
 
-        "405":
+        "403":
           description: Создавать новых пользователей могут только анонимные клиенты.
 
         "409":
@@ -377,7 +377,7 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
-        "405":
+        "403":
           description: Только владелец может вносить изменения в объект.
 
   /comments/{offerId}:
@@ -569,6 +569,12 @@ components:
         isPremium:
           type: boolean
           example: true
+        isFavorite:
+          type: boolean
+          default: false
+        rating:
+          type: number
+          default: 0
         housingTypeType:
           type: string
           enum:
@@ -599,6 +605,9 @@ components:
               - Towels
               - Fridge
           example: [Breakfast, Towels]
+        commentsCount:
+          type: number
+          default: 0
         location:
           type: array
           items:
@@ -608,6 +617,9 @@ components:
     offerRdo:
       type: object
       properties:
+        id:
+          type: string
+          example: 654bb877460df84b50921e49
         title:
           type: string
           example: Lorem ipsum dolor sit amet.
@@ -697,6 +709,9 @@ components:
     shortOfferRdo:
       type: object
       properties:
+        id:
+          type: string
+          example: 654bb877460df84b50921e49
         title:
           type: string
           example: Lorem ipsum dolor sit amet.

@@ -11,7 +11,7 @@ export const aggregateComments = [
   },
   {
     $addFields: {
-      rating: { $avg: '$comments.rating' },
+      rating: { $round: [{ $avg: '$comments.rating' }, 1]},
       commentsCount: { $size: '$comments' }
     },
   },

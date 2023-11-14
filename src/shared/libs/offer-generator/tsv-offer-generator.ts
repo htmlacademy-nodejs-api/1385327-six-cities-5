@@ -27,14 +27,13 @@ export class TSVOfferGenerator implements OfferGenerator {
     const preview = getRandomItem<string>(this.mockData.preview);
     const photos = getRandomItem<string>(this.mockData.photos);
     const isPremium = Boolean(generateRandomValue(0, 1));
-    //const isFavorite = false;
-    //const rating = 0;
+
     const housingType = getRandomItem(this.mockData.housingType) as keyof typeof Housing;
     const roomCount = generateRandomValue(MIN_ROOM_COUNT, MAX_ROOM_COUNT).toString();
     const guestCount = generateRandomValue(MIN_GUEST_COUNT, MAX_GUEST_COUNT).toString();
     const rentPrice = generateRandomValue(MIN_PRICE, MAX_PRICE).toString();
     const features = getRandomItems<string>(this.mockData.features).join(';');
-    //const commentsCount = 0;
+
     const location = `${LOCATION[city].longitude};${LOCATION[city].latitude}`;
     // author
     const name = getRandomItem<string>(this.mockData.name);

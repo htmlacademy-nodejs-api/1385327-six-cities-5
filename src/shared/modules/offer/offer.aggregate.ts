@@ -35,7 +35,18 @@ export const aggregateFavorite = (userId: string) => ([
 ]);
 
 export const aggregateDefaultFavorite = [
-  { $addFields:
-      { isFavorite: false }
-  }
+  { $addFields: { isFavorite: false } }
+];
+
+export const aggregateAuthor = [
+  {
+    $lookup: {
+      from: 'users',
+      localField: 'author',
+      foreignField: '_id',
+      as: 'users',
+    },
+  },
+  { $addFields: { author: { $arrayElemAt: ['$users', 0] }, }, },
+  { $unset: ['users'], },
 ];

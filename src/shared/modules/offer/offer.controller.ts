@@ -12,7 +12,7 @@ import {
   PrivateRouteMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
-import { Component } from '../../types/index.js'; //City,
+import { Component } from '../../types/index.js';
 
 import { OfferService } from './offer-service.interface.js';
 import { FavoriteService } from '../favorite/index.js';
@@ -24,6 +24,7 @@ import { City } from '../../types/index.js';
 import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { OfferRdo } from './rdo/offer.rdo.js';
+import { ShortOfferRdo } from './rdo/short-offer.rdo.js';
 import {
   FindRequest,
   ShowOfferRequest,
@@ -103,15 +104,18 @@ export class OfferController extends BaseController {
 
     const offers = await this.offerService.find(count, userId);
 
-    this.ok(res, fillDTO(OfferRdo, offers));
+    this.ok(res, fillDTO(ShortOfferRdo, offers));
   }
 
   // Создание предложения
   public async create({body, tokenPayload}: CreateOfferRequest, res: Response): Promise<void> {
-    const result = await this.offerService.create({ ...body, author: tokenPayload.id});
-    const offer = await this.offerService.findById(result.id);
+    const userId = tokenPayload.id;
 
-    this.created(res, fillDTO(OfferRdo, offer));
+    const offer = await this.offerService.create({ ...body, author: userId});
+    const fullOffer = Object.assign(offer , {isFavorite: false , rating: 0, commentsCount: 0});
+    const createdOffer = await this.offerService.findById(fullOffer.id);
+
+    this.created(res, fillDTO(OfferRdo, createdOffer));
   }
 
   // Показ конкретного предложения
@@ -119,10 +123,9 @@ export class OfferController extends BaseController {
     const { offerId } = params;
     const userId = tokenPayload?.id;
 
-    const offer = await this.offerService.findById(offerId);
-    const isFavorite = await this.favoriteService.exists({ userId, offerId });
+    const offer = await this.offerService.findById(offerId, userId);
 
-    return this.ok(res, fillDTO(OfferRdo, { ...offer?.toObject(), isFavorite }));
+    return this.ok(res, fillDTO(OfferRdo, offer));
   }
 
   // Обновление конкретного предложения
@@ -134,7 +137,7 @@ export class OfferController extends BaseController {
 
     if (currentOffer && currentOffer.author._id.toString() !== userId) {
       throw new HttpError(
-        StatusCodes.METHOD_NOT_ALLOWED,
+        StatusCodes.FORBIDDEN,
         'Only the author has the right to change the offer',
         'OfferController'
       );
@@ -155,7 +158,7 @@ export class OfferController extends BaseController {
 
     if (currentOffer && currentOffer.author._id.toString() !== userId) {
       throw new HttpError(
-        StatusCodes.METHOD_NOT_ALLOWED,
+        StatusCodes.FORBIDDEN,
         'Only the author has the right to delete the offer',
         'OfferController'
       );
@@ -195,7 +198,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    this.ok(res, fillDTO(OfferRdo, premiumOffers));
+    this.ok(res, fillDTO(ShortOfferRdo, premiumOffers));
   }
 
 }

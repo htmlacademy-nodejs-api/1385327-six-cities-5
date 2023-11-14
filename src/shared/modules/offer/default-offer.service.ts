@@ -11,7 +11,7 @@ import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 
 import { DEFAULT_OFFER_COUNT, DEFAULT_PREMIUM_OFFER_COUNT } from './offer.constant.js';
-import { aggregateComments, aggregateDefaultFavorite, aggregateFavorite } from './offer.aggregate.js';
+import { aggregateComments, aggregateDefaultFavorite, aggregateFavorite, aggregateAuthor } from './offer.aggregate.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -30,8 +30,16 @@ export class DefaultOfferService implements OfferService {
   }
 
   // Найти offer по id ------------------------------------------------------------------------------------- ()
-  public async findById(offerId: string) {
-    return await this.offerModel.findById(offerId).populate('author');
+  public async findById(offerId: string, userId: string): Promise<DocumentType<OfferEntity> | null> {
+    const aggregate = userId ? [...aggregateComments, ...aggregateFavorite(userId), ...aggregateAuthor] : [...aggregateComments, ...aggregateDefaultFavorite, ...aggregateAuthor];
+    return await this.offerModel
+      .aggregate([
+        { $match: { $expr: { $eq: ['$_id', { $toObjectId: offerId }], }, }, },
+        ...aggregate,
+      ])
+      .exec()
+      .then(([result]) => result ?? null);
+
   }
 
   // Найти все предложения ------------------------------------------------------------------------------------- ()
@@ -42,7 +50,6 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel
       .aggregate([
         ...aggregate,
-        { $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, isFavorite: 1, rating: 1, housingType: 1, rentPrice: 1, commentsCount: 1 } },
         { $sort: { createdAt: SortType.Down } },
         { $limit: limit },
       ])
@@ -96,7 +103,6 @@ export class DefaultOfferService implements OfferService {
           { $eq: [ '$city', city ] },
           { $eq: [ '$isPremium', true ] }
         ] } } },
-        { $project: { title: 1, postDate: 1, city: 1, preview: 1, isPremium: 1, isFavorite: 1, rating: 1, housingType: 1, rentPrice: 1, commentsCount: 1 } },
         { $sort: { createdAt: SortType.Down } },
         { $limit: DEFAULT_PREMIUM_OFFER_COUNT },
       ])

@@ -109,7 +109,7 @@ export class UserController extends BaseController {
     const uploadFile = { avatar: file?.filename };
 
     if (id !== userId) {
-      throw new HttpError(StatusCodes.METHOD_NOT_ALLOWED, 'Only the author has the right to change avatar');
+      throw new HttpError(StatusCodes.FORBIDDEN, 'Only the author has the right to change avatar');
     }
     await this.userService.updateById(userId, uploadFile);
 

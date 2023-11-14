@@ -3,7 +3,7 @@
 
 POST http://localhost:4000/users/register HTTP/1.1
 Content-Type: application/json
-//Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRvcmFuczFAb3Zlcmxvb2submV0IiwiaWQiOiI2NTRjYTRjZmEzY2EzOWM4YzhhOTFjYmYiLCJpYXQiOjE2OTk4NTg3MjIsImV4cCI6MTcwMDAzMTUyMn0.TV4MrYIhmERFPqHqgOaUZBsGBSk7HahxCn5JrIiBbYM
+//Authorization: Bearer
 
 {
   "name": "Jack8",
@@ -21,7 +21,7 @@ POST http://localhost:4000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "torans1@overlook.net",
+  "email": "torans@overlook.net",
   "password": "shining"
 }
 
