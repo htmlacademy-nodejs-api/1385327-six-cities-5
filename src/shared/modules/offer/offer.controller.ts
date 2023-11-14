@@ -109,10 +109,13 @@ export class OfferController extends BaseController {
 
   // Создание предложения
   public async create({body, tokenPayload}: CreateOfferRequest, res: Response): Promise<void> {
-    const result = await this.offerService.create({ ...body, author: tokenPayload.id});
-    const offer = await this.offerService.findById(result.id);
+    const userId = tokenPayload.id;
 
-    this.created(res, fillDTO(OfferRdo, offer));
+    const offer = await this.offerService.create({ ...body, author: userId});
+    const fullOffer = Object.assign(offer , {isFavorite: false , rating: 0, commentsCount: 0});
+    const createdOffer = await this.offerService.findById(fullOffer.id);
+
+    this.created(res, fillDTO(OfferRdo, createdOffer));
   }
 
   // Показ конкретного предложения

@@ -569,6 +569,12 @@ components:
         isPremium:
           type: boolean
           example: true
+        isFavorite:
+          type: boolean
+          default: false
+        rating:
+          type: number
+          default: 0
         housingTypeType:
           type: string
           enum:
@@ -599,6 +605,9 @@ components:
               - Towels
               - Fridge
           example: [Breakfast, Towels]
+        commentsCount:
+          type: number
+          default: 0
         location:
           type: array
           items:
