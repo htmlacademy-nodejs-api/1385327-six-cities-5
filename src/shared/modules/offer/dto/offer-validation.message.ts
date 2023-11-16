@@ -1,26 +1,21 @@
 import {
-  MIN_TITLE_LENGTH,
-  MAX_TITLE_LENGTH,
-  MIN_DESCRIPTION_LENGTH,
-  MAX_DESCRIPTION_LENGTH,
-  MIN_IMAGES_COUNT,
-  MIN_ROOM_COUNT,
-  MAX_ROOM_COUNT,
-  MIN_GUEST_COUNT,
-  MAX_GUEST_COUNT,
-  MIN_PRICE,
-  MAX_PRICE,
-  MIN_COORDS_LENGTH
+  TitleLength,
+  DescriptionLength,
+  IMAGES_COUNT,
+  RoomCount,
+  GuestCount,
+  PriceValue,
+  COORDS_LENGTH
 } from './constant.js';
 
 export const OfferValidationMessage = {
   title: {
     invalidFormat: 'title must be string',
-    length: `title length must be into range ${MIN_TITLE_LENGTH} - ${MAX_TITLE_LENGTH}`,
+    length: `title length must be into range ${TitleLength.Min} - ${TitleLength.Max}`,
   },
   description: {
     invalidFormat: 'description must be string',
-    length: `description length must be into range ${MIN_DESCRIPTION_LENGTH} - ${MAX_DESCRIPTION_LENGTH}`,
+    length: `description length must be into range ${DescriptionLength.Min} - ${DescriptionLength.Max}`,
   },
   postDate: {
     invalidFormat: 'postDate must be a valid ISO date',
@@ -33,7 +28,7 @@ export const OfferValidationMessage = {
   },
   photos: {
     invalidFormat: 'images must be array',
-    invalidCount: `images array length must be ${MIN_IMAGES_COUNT}`,
+    invalidCount: `images array length must be ${IMAGES_COUNT}`,
     invalidValue: 'images must be string',
   },
   isPremium: {
@@ -44,25 +39,25 @@ export const OfferValidationMessage = {
   },
   roomCount: {
     invalidFormat: 'room must be an integer',
-    minValue: `minimum room is ${MIN_ROOM_COUNT}`,
-    maxValue: `maximum room is ${MAX_ROOM_COUNT}`,
+    minValue: `minimum room is ${RoomCount.Min}`,
+    maxValue: `maximum room is ${RoomCount.Max}`,
   },
   guestCount: {
     invalidFormat: 'guest must be an integer',
-    minValue: `minimum guest is ${MIN_GUEST_COUNT}`,
-    maxValue: `maximum guest is ${MAX_GUEST_COUNT}`,
+    minValue: `minimum guest is ${GuestCount.Min}`,
+    maxValue: `maximum guest is ${GuestCount.Max}`,
   },
   rentPrice: {
     invalidFormat: 'price must be an integer',
-    minValue: `minimum price is ${MIN_PRICE}`,
-    maxValue: `maximum price is ${MAX_PRICE}`,
+    minValue: `minimum price is ${PriceValue.Min}`,
+    maxValue: `maximum price is ${PriceValue.Max}`,
   },
   features: {
     invalidFormat: 'field categories must be an array',
   },
   location: {
     invalidFormat: 'coords must be a array',
-    length: `coords array length must be ${MIN_COORDS_LENGTH}`,
+    length: `coords array length must be ${COORDS_LENGTH}`,
     invalidValue: 'coords must be string',
   },
   author: {

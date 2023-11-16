@@ -3,14 +3,10 @@ import { OfferGenerator } from './offer-generator.interface.js';
 import { MockServerData, City, Housing } from '../../types/index.js';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../helpers/index.js';
 import {
-  FIRST_WEEK_DAY,
-  LAST_WEEK_DAY,
-  MIN_ROOM_COUNT,
-  MAX_ROOM_COUNT,
-  MIN_GUEST_COUNT,
-  MAX_GUEST_COUNT,
-  MIN_PRICE,
-  MAX_PRICE,
+  WeekDay,
+  RoomCount,
+  GuestCount,
+  PriceValue,
   LOCATION
 } from './constants.js';
 
@@ -22,16 +18,16 @@ export class TSVOfferGenerator implements OfferGenerator {
 
     const title = getRandomItem<string>(this.mockData.title);
     const description = getRandomItem<string>(this.mockData.description);
-    const postDate = dayjs().subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day').toISOString();
+    const postDate = dayjs().subtract(generateRandomValue(WeekDay.First, WeekDay.Last), 'day').toISOString();
     const city = getRandomItem(this.mockData.city) as keyof typeof City;
     const preview = getRandomItem<string>(this.mockData.preview);
     const photos = getRandomItem<string>(this.mockData.photos);
     const isPremium = Boolean(generateRandomValue(0, 1));
 
     const housingType = getRandomItem(this.mockData.housingType) as keyof typeof Housing;
-    const roomCount = generateRandomValue(MIN_ROOM_COUNT, MAX_ROOM_COUNT).toString();
-    const guestCount = generateRandomValue(MIN_GUEST_COUNT, MAX_GUEST_COUNT).toString();
-    const rentPrice = generateRandomValue(MIN_PRICE, MAX_PRICE).toString();
+    const roomCount = generateRandomValue(RoomCount.Min, RoomCount.Max).toString();
+    const guestCount = generateRandomValue(GuestCount.Min, GuestCount.Max).toString();
+    const rentPrice = generateRandomValue(PriceValue.Min, PriceValue.Max).toString();
     const features = getRandomItems<string>(this.mockData.features).join(';');
 
     const location = `${LOCATION[city].longitude};${LOCATION[city].latitude}`;

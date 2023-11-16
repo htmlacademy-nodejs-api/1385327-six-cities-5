@@ -1,16 +1,14 @@
 import { IsEmail, IsString, Length, IsBoolean, Matches } from 'class-validator';
 import { UserValidationMessage } from './user-validation.message.js';
 import {
-  MIN_NAME_LENGTH,
-  MAX_NAME_LENGTH,
+  UserNameLength,
   IS_JPG_OR_PNG,
-  MIN_PASSWORD_LENGTH,
-  MAX_PASSWORD_LENGTH
+  PasswordLength
 } from './constant.js';
 
 export class CreateUserDto {
   @IsString({ message: UserValidationMessage.name.invalidFormat })
-  @Length(MIN_NAME_LENGTH, MAX_NAME_LENGTH, { message: UserValidationMessage.name.lengthField })
+  @Length(UserNameLength.Min, UserNameLength.Max, { message: UserValidationMessage.name.lengthField })
   public name: string;
 
   @IsEmail({}, { message: UserValidationMessage.email.invalidFormat })
@@ -24,6 +22,6 @@ export class CreateUserDto {
   public isProType: boolean;
 
   @IsString({ message: UserValidationMessage.password.invalidFormat })
-  @Length(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, { message: UserValidationMessage.password.lengthField })
+  @Length(PasswordLength.Min, PasswordLength.Max, { message: UserValidationMessage.password.lengthField })
   public password: string;
 }

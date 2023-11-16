@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { DEFAULT_STATIC_IMAGES, STATIC_RESOURCE_FIELDS } from './path-transformer.constant.js';
 import { Component } from '../../../types/index.js';
 import { Logger } from '../../logger/index.js';
-import { STATIC_FILES_ROUTE, UPLOAD_FILES_ROUTE } from '../../../../rest/index.js';
+import { FilesRoute } from '../../../../rest/index.js';
 import { getFullServerPath } from '../../../helpers/index.js';
 import { Config, RestSchema } from '../../config/index.js';
 
@@ -42,8 +42,8 @@ export class PathTransformer {
           }
 
           if (this.isStaticProperty(key) && typeof value === 'string') {
-            const staticPath = STATIC_FILES_ROUTE;
-            const uploadPath = UPLOAD_FILES_ROUTE;
+            const staticPath = FilesRoute.Static;
+            const uploadPath = FilesRoute.Upload;
             const serverHost = this.config.get('HOST');
             const serverPort = this.config.get('PORT');
 
