@@ -1,14 +1,22 @@
-export const FIRST_WEEK_DAY = 1;
-export const LAST_WEEK_DAY = 7;
+export enum WeekDay {
+  First = 1,
+  Last = 7,
+}
 
-export const MIN_ROOM_COUNT = 1;
-export const MAX_ROOM_COUNT = 8;
+export enum RoomCount {
+  Min = 1,
+  Max = 8,
+}
 
-export const MIN_GUEST_COUNT = 1;
-export const MAX_GUEST_COUNT = 10;
+export enum GuestCount {
+  Min = 1,
+  Max = 10,
+}
 
-export const MIN_PRICE = 100;
-export const MAX_PRICE = 100000;
+export enum PriceValue {
+  Min = 100,
+  Max = 100000,
+}
 
 export const LOCATION = {
   'Paris': {
